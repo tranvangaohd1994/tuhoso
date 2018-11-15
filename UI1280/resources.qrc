@@ -1,0 +1,16 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file>images/welcome.jpg</file>
+	<file>images/darkbg.jpg</file>
+	<file>images/Background.jpg</file>
+	<file>images/waiting0.jpg</file>
+	<file>images/waiting1.jpg</file>
+	<file>images/waiting2.jpg</file>
+	<file>images/waiting3.jpg</file>
+	<file>images/back.png</file>
+	<file>images/canhbaochay.jpg</file>
+	<file>images/coNguoi.jpg</file>
+	<file>images/canhbaosuco.jpg</file>
+
+</qresource>
+</RCC>

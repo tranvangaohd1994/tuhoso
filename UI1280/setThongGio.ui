@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>setThongGio</class>
+ <widget class="QWidget" name="setThongGio">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1280</width>
+    <height>800</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1280</width>
+     <height>800</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">.QFrame{background-image: url(:/images/darkbg.jpg);}.QPushButton:pressed { background-color: #4164ff}.QPushButton{border-radius: 20px;background-color: #FFC107;font: 75 20pt bold &quot;Ubuntu&quot;;}.QLabel{color:#FF8F00;font: 75 32pt &quot;Ubuntu&quot;;}.QLineEdit{background-color:#B2FF59;font: 75 32pt &quot;Ubuntu&quot;;}
+</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>110</y>
+      <width>1301</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 75 32pt &quot;Ubuntu&quot;;
+background-color: rgb(0, 0, 0);
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Cài đặt thông gió</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="margin">
+     <number>0</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>380</y>
+      <width>351</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string>Phút</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="margin">
+     <number>0</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>470</y>
+      <width>541</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string>Thời gian thông gió(Phút)</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="margin">
+     <number>0</number>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btKichHoat">
+    <property name="geometry">
+     <rect>
+      <x>860</x>
+      <y>630</y>
+      <width>151</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Kích hoạt</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btExit">
+    <property name="geometry">
+     <rect>
+      <x>1070</x>
+      <y>630</y>
+      <width>151</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Thoát</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="tbPhut">
+    <property name="geometry">
+     <rect>
+      <x>710</x>
+      <y>370</y>
+      <width>321</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Ubuntu</family>
+      <pointsize>32</pointsize>
+      <weight>9</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>10</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="tbTimes">
+    <property name="geometry">
+     <rect>
+      <x>710</x>
+      <y>460</y>
+      <width>321</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Ubuntu</family>
+      <pointsize>32</pointsize>
+      <weight>9</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>5</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>290</y>
+      <width>361</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string>Giờ</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="margin">
+     <number>0</number>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="tbGio">
+    <property name="geometry">
+     <rect>
+      <x>710</x>
+      <y>280</y>
+      <width>321</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Ubuntu</family>
+      <pointsize>32</pointsize>
+      <weight>9</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>10</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="grcdControl">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>610</y>
+      <width>511</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{color: rgb(255, 255, 255);font: 75 Bold 20pt &quot;Ubuntu&quot;;}.QRadioButton{font: 75 Bold 20pt &quot;Ubuntu&quot;;color: white;background-color: #55007f;}.QRadioButton::indicator{width: 20px;height: 20px;}
+</string>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QRadioButton" name="rbAllDay">
+     <property name="geometry">
+      <rect>
+       <x>310</x>
+       <y>10</y>
+       <width>191</width>
+       <height>100</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Tất cả ngày</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="rbOneDay">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>10</y>
+       <width>201</width>
+       <height>100</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>1 Ngày</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>

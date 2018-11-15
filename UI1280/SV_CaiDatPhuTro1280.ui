@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SVCaiDatPhuTro</class>
+ <widget class="QWidget" name="SVCaiDatPhuTro">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1280</width>
+    <height>800</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1280</width>
+     <height>800</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">.QFrame{background-image: url(:/images/darkbg.jpg);}#lbtitle{color:red ;font: 75  30pt bold &quot;Ubuntu&quot;;}QPushButton:pressed { background-color: #FF6E40}#btBack{color:white;border-image: url(:/images/back.png);}QPushButton:pressed { background-color: #FF6E40}.QPushButton{border-radius: 20px;background-color: #FFC107;font: 75 20pt bold &quot;Ubuntu&quot;;}</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QLabel" name="lbtitle">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>110</y>
+      <width>491</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Cài đặt phụ trợ</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btDcThoiGian">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>230</y>
+      <width>181</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Điều chỉnh
+ thời gian</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btCdTinhNang">
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>230</y>
+      <width>181</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Cài đặt
+ tính năng</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btThamSlave">
+    <property name="geometry">
+     <rect>
+      <x>830</x>
+      <y>230</y>
+      <width>181</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Thăm dò
+ máy chủ</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btTietKiemNangLuong">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>345</y>
+      <width>181</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Tiết kiệm
+ năng lượng</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btAmBao">
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>345</y>
+      <width>181</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Âm báo
+ nhắc nhở</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btHuyThongBao">
+    <property name="geometry">
+     <rect>
+      <x>830</x>
+      <y>345</y>
+      <width>181</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Hủy
+ thông báo</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btKhoa">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>460</y>
+      <width>181</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Khóa</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btMoKhoa">
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>460</y>
+      <width>181</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Mở khóa</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btCdGoc">
+    <property name="geometry">
+     <rect>
+      <x>830</x>
+      <y>460</y>
+      <width>181</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Khôi phục
+ cài đặt gốc</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btBack">
+    <property name="geometry">
+     <rect>
+      <x>830</x>
+      <y>580</y>
+      <width>181</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Quay lại</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btHocLenhDieuHoa">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>580</y>
+      <width>181</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Học lệnh
+điều hòa</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btDkDieuHoa">
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>580</y>
+      <width>181</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Điều khiển
+điều hòa</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>

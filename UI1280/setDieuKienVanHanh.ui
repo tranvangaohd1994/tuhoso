@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>setDieuKienVanHanh</class>
+ <widget class="QWidget" name="setDieuKienVanHanh">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1280</width>
+    <height>800</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1280</width>
+     <height>800</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">.QFrame{background-image: url(:/images/darkbg.jpg);}.QPushButton:pressed { background-color:#FF6E40}.QPushButton{border-radius: 20px;background-color: #FFC107;font: 75 20pt bold &quot;Ubuntu&quot;;}.QLabel{color:#FF8F00;font: 75 32pt &quot;Ubuntu&quot;;}.QLineEdit{background-color:#B2FF59;font: 75 32pt &quot;Ubuntu&quot;;}#lbHuongDan{font: 75 22pt &quot;Ubuntu&quot;;color:#ffff35}
+</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>-7</x>
+      <y>110</y>
+      <width>1291</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 75 32pt &quot;Ubuntu&quot;;
+background-color: rgb(0, 0, 0);
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Thiết lập môi trường vận hành</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="margin">
+     <number>0</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>460</y>
+      <width>221</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string>Độ ẩm(%)</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="margin">
+     <number>0</number>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btSave">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>650</y>
+      <width>181</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Lưu</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btExit">
+    <property name="geometry">
+     <rect>
+      <x>960</x>
+      <y>650</y>
+      <width>161</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Thoát</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>880</x>
+      <y>200</y>
+      <width>301</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string>Mô tả thông số</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="margin">
+     <number>0</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbHuongDan">
+    <property name="geometry">
+     <rect>
+      <x>840</x>
+      <y>260</y>
+      <width>411</width>
+      <height>371</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Đây là thông số cài đặt cho môi trường vận hành bình thường của hệ thống lưu trữ.
+Trong quá trình vận hành nếu nhiệt độ hoặc độ ẩm vượt ra ngoài dải cho phép thì hệ thống sẽ tự động kích hoạt các thiết bị điều hòa, hút ẩm để đưa hệ thống về nhiệt độ cho phép hoạt động.</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>290</y>
+      <width>231</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string>Nhiệt độ(C)</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="margin">
+     <number>0</number>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="tbTempFrom">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>280</y>
+      <width>91</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Ubuntu</family>
+      <pointsize>32</pointsize>
+      <weight>9</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>20</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>290</y>
+      <width>101</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string>Đến</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="margin">
+     <number>0</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_8">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>460</y>
+      <width>101</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string>Đến</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="margin">
+     <number>0</number>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="tbTempTo">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>280</y>
+      <width>91</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Ubuntu</family>
+      <pointsize>32</pointsize>
+      <weight>9</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>20</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="tbHumiTo">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>450</y>
+      <width>91</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Ubuntu</family>
+      <pointsize>32</pointsize>
+      <weight>9</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>20</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="tbHumiFrom">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>450</y>
+      <width>91</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Ubuntu</family>
+      <pointsize>32</pointsize>
+      <weight>9</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>20</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>

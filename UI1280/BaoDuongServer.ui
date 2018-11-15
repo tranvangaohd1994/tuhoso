@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>BaoDuongServer</class>
+ <widget class="QWidget" name="BaoDuongServer">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1280</width>
+    <height>800</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1280</width>
+     <height>800</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">.QFrame{background-image: url(:/images/darkbg.jpg);}#lbtitle{color:red ;font: 75  30pt bold &quot;Ubuntu&quot;;}.QPushButton:pressed { background-color: #FF6E40}.QPushButton{border-radius: 20px;background-color: #c9ffbc;font: 75 20pt bold &quot;Ubuntu&quot;;}QGroupBox {border: 2px solid #FFAB91;border-radius: 10px;}</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QLabel" name="lbtitle">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>130</y>
+      <width>661</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Thông tin bảo dưỡng</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btTiepTuc">
+    <property name="geometry">
+     <rect>
+      <x>930</x>
+      <y>610</y>
+      <width>161</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Tiếp tục</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="grRight">
+    <property name="geometry">
+     <rect>
+      <x>450</x>
+      <y>210</y>
+      <width>391</width>
+      <height>391</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">.QLabel{color:#FFFF00 ;font: 75  22pt &quot;Ubuntu&quot;;}</string>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QLabel" name="lbCoichip">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>110</y>
+       <width>371</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Còi chip</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lbCBChayTrong">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>260</y>
+       <width>331</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Cảm biến cháy trong</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lbCBChayNgoai">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>320</y>
+       <width>331</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Cảm biến cháy ngoài</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lbQuatGio">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>160</y>
+       <width>371</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Quạt thông gió</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lbDenThap">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>210</y>
+       <width>371</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Đèn tháp 3 màu</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lbTempIn">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>341</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Cảm biến nhiệt độ trong</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lbTempOut">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>60</y>
+       <width>341</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Cảm biến nhiệt độ ngoài</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="btThoat">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>600</y>
+      <width>161</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Thoát</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbValue">
+    <property name="geometry">
+     <rect>
+      <x>490</x>
+      <y>640</y>
+      <width>330</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Waiting</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>

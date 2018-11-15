@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SV_ChonDMTu</class>
+ <widget class="QWidget" name="SV_ChonDMTu">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1280</width>
+    <height>800</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1280</width>
+     <height>800</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">.QFrame{background-image:url(:/images/Background.jpg);}.QLabel{color:#F44336 ;font: 75  34pt bold &quot;Ubuntu&quot;;}QPushButton:pressed { background-color: #FF6E40}.QPushButton{border-radius: 20px;background-color: #FFC107;font: 75 26pt bold &quot;Ubuntu&quot;;}#btBack{color:white;border-image: url(:/images/back.png);}QCheckBox{font: 75 Bold 30pt &quot;Ubuntu&quot;;color: white;background-color: #55007f;}.QCheckBox::indicator{width: 30px;height: 30px;}</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QLabel" name="lbtitle">
+    <property name="geometry">
+     <rect>
+      <x>450</x>
+      <y>140</y>
+      <width>431</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Chọn tủ cài đặt</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btBack">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>620</y>
+      <width>211</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Quay lại</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btChon">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>620</y>
+      <width>211</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Cài Đặt</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="grcdControl">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>260</y>
+      <width>901</width>
+      <height>261</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">.QRadioButton{font: 75 Bold 26pt &quot;Ubuntu&quot;;color: white;background-color: #55007f;}.QRadioButton::indicator{width: 20px;height: 20px;}
+</string>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QRadioButton" name="rbTu2">
+     <property name="geometry">
+      <rect>
+       <x>570</x>
+       <y>70</y>
+       <width>171</width>
+       <height>100</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Tủ phải</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="rbTu1">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>70</y>
+       <width>161</width>
+       <height>100</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Tủ trái</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="btChon_2">
+    <property name="geometry">
+     <rect>
+      <x>940</x>
+      <y>620</y>
+      <width>211</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Tiếp</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SVQuanLy</class>
+ <widget class="QWidget" name="SVQuanLy">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1280</width>
+    <height>800</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1280</width>
+     <height>800</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">.QFrame{background-image:url(:/images/Background.jpg);}.QLabel{color:#F44336 ;font: 75  30pt bold &quot;Ubuntu&quot;;}QPushButton:pressed { background-color: #FF6E40}.QPushButton{border-radius: 20px;background-color: #FFC107;font: 75 20pt bold &quot;Ubuntu&quot;;}#btBack{color:white;border-image: url(:/images/back.png);}</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QLabel" name="lbtitle">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>180</y>
+      <width>381</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Giao diện quản lý</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btBack">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>650</y>
+      <width>211</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Quay lại</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btCaiDatPhuTro">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>340</y>
+      <width>191</width>
+      <height>151</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Cài đặt
+ Phụ trợ</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btCaiDatNangCao">
+    <property name="geometry">
+     <rect>
+      <x>740</x>
+      <y>340</y>
+      <width>191</width>
+      <height>151</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Cài đặt
+ Nâng cao</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbThongBao">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>540</y>
+      <width>681</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>ddd</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>

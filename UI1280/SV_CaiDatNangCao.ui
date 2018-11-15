@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SVCaiDatNangCao</class>
+ <widget class="QWidget" name="SVCaiDatNangCao">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1280</width>
+    <height>800</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1280</width>
+     <height>800</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">.QFrame{background-image: url(:/images/Background.jpg);}#lbtitle{color:red ;font: 75  30pt bold &quot;Ubuntu&quot;;}QPushButton:pressed { background-color: #FF6E40}#btBack{color:white;border-image: url(:/images/back.png);}QPushButton:pressed { background-color: #FF6E40}.QPushButton{border-radius: 20px;background-color: #FFC107;font: 75 20pt bold &quot;Ubuntu&quot;;}</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QLabel" name="lbtitle">
+    <property name="geometry">
+     <rect>
+      <x>480</x>
+      <y>130</y>
+      <width>401</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Cài đặt nâng cao</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btLucKet">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>210</y>
+      <width>191</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Cấp độ Lực
+chống kẹt</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btChieuDC">
+    <property name="geometry">
+     <rect>
+      <x>590</x>
+      <y>210</y>
+      <width>191</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Chiều quay
+ Động cơ</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btTocDoDC">
+    <property name="geometry">
+     <rect>
+      <x>910</x>
+      <y>210</y>
+      <width>191</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Tốc độ
+ Động cơ</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btKCMotu">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>330</y>
+      <width>191</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Khoảng cách
+ Mở tủ</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btKCGiamToc">
+    <property name="geometry">
+     <rect>
+      <x>590</x>
+      <y>330</y>
+      <width>191</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Khoảng cách
+ giảm tốc</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btTatCamBien">
+    <property name="geometry">
+     <rect>
+      <x>910</x>
+      <y>330</y>
+      <width>191</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Tắt
+ Cảm biến</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btCheDoBaoDuong">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>570</y>
+      <width>191</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Chế độ
+ Bảo dưỡng</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btDoiMatKhau">
+    <property name="geometry">
+     <rect>
+      <x>590</x>
+      <y>570</y>
+      <width>191</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Đổi
+ Mật khẩu</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btCdGoc">
+    <property name="geometry">
+     <rect>
+      <x>910</x>
+      <y>570</y>
+      <width>191</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Khôi Phục
+ Cài đặt gốc</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btBack">
+    <property name="geometry">
+     <rect>
+      <x>1090</x>
+      <y>690</y>
+      <width>181</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Quay lại</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btQuanLyTu">
+    <property name="geometry">
+     <rect>
+      <x>910</x>
+      <y>450</y>
+      <width>191</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Quản lý tủ</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btMoiTruongVH">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>450</y>
+      <width>191</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Môi Trường
+ vận hành</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btThongGio">
+    <property name="geometry">
+     <rect>
+      <x>590</x>
+      <y>450</y>
+      <width>191</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Thông gió</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>

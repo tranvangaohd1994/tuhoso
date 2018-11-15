@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>fKetQuaTraCuu</class>
+ <widget class="QWidget" name="fKetQuaTraCuu">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1280</width>
+    <height>800</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1280</width>
+     <height>800</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">.QFrame{background-image: url(:/images/darkbg.jpg);}.QPushButton:pressed { background-color: #4164ff}.QPushButton{border-radius: 18px;background-color: #FFC107;font: 75 18pt bold &quot;Ubuntu&quot;;}.QLabel{color:#FF8F00;font: 75 24pt &quot;Ubuntu&quot;;}.QLineEdit{background-color:#B2FF59;font: 75 32pt &quot;Ubuntu&quot;; color: #ff0000}.QGroupBox {border: 2px solid #FFAB91;border-radius: 10px;}
+</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QLabel" name="label">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>120</y>
+      <width>1281</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 75 32pt &quot;Ubuntu&quot;;background-color: rgb(0, 0, 0);color: rgb(255, 0, 0);</string>
+    </property>
+    <property name="text">
+     <string>Kết quả tra Cứu</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="margin">
+     <number>0</number>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btMo">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>200</y>
+      <width>261</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Mở</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btExit">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>700</y>
+      <width>131</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Thoát</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btTrangDau">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>300</y>
+      <width>261</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Trang đầu</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btTrangTruoc">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>400</y>
+      <width>261</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Trang trước</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btTrangTiepTheo">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>500</y>
+      <width>261</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Trang tiếp theo</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btTrangCuoi">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>600</y>
+      <width>261</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Trang cuối</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="grRight">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>220</y>
+      <width>771</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">.QLabel{color:#FFFF00 ;font: 75  22pt &quot;Ubuntu&quot;;}</string>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QLabel" name="lbTiemCanPhai">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>10</y>
+       <width>111</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Khu vực :</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lbTiemCanPhai_2">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>60</y>
+       <width>111</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Cột :</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lbTiemCanPhai_3">
+     <property name="geometry">
+      <rect>
+       <x>500</x>
+       <y>10</y>
+       <width>111</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Khoang :</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lbTiemCanPhai_4">
+     <property name="geometry">
+      <rect>
+       <x>500</x>
+       <y>60</y>
+       <width>111</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Tầng : </string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="leKhuVuc">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>10</y>
+       <width>113</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>1</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="leCot">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>60</y>
+       <width>113</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>2</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="leKhoang">
+     <property name="geometry">
+      <rect>
+       <x>620</x>
+       <y>10</y>
+       <width>113</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>2</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="leTang">
+     <property name="geometry">
+      <rect>
+       <x>620</x>
+       <y>60</y>
+       <width>113</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>3</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="grRight_2">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>380</y>
+      <width>771</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">.QLabel{color:#FFFF00 ;font: 75  22pt &quot;Ubuntu&quot;;}</string>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QLabel" name="lbTiemCanPhai_5">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>201</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Số Seri hồ sơ :</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="leSeri">
+     <property name="geometry">
+      <rect>
+       <x>212</x>
+       <y>20</y>
+       <width>551</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>AAASSSSS</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="grRight_3">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>500</y>
+      <width>771</width>
+      <height>201</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">.QLabel{color:#FFFF00 ;font: 75  22pt &quot;Ubuntu&quot;;}</string>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QLabel" name="lbTiemCanPhai_6">
+     <property name="geometry">
+      <rect>
+       <x>320</x>
+       <y>30</y>
+       <width>141</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Tên hồ sơ :</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="leTen">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>100</y>
+       <width>771</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>name of file</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>
