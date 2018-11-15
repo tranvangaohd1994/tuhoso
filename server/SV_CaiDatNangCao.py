@@ -152,7 +152,10 @@ class Ui_SVCaiDatNangCao(object):
     def btChieuDC_click(self):
         self.ui = Ui_setChieuQuayDC()
         self.window = QtWidgets.QMainWindow()
-        self.ui.setupUi(self.window,True)
+        if server.numClientLeft > 0 :
+            self.ui.setupUi(self.window,True)
+        else :
+            self.ui.setupUi(self.window,False)
         self.window.show()
         if server.isFullSceen :
             self.window.showFullScreen()

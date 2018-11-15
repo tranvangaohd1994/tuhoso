@@ -52,10 +52,6 @@ suCo_logger.error('--------------Phien Hoat Dong Moi--------------------')
 temp_logger = setup_logger('temp_log', '/home/pi/Desktop/temp.log')
 
 #giao dien
-height = 0
-width = 0
-xscale = 0
-yscale = 0
 isFullScreen = False
 isFullSceen = False
 # bien kiem tra xem tu nao dang duoc mo
@@ -512,6 +508,7 @@ class OpenTuThread(threading.Thread,DongMoTu):
         global isWaiting, tuOpenedLeft, tuTraiPhai,tuOpenedRight
         self.numberTu = int(self.numTu.split('_')[1])
         firstName = self.numTu.split('_')[0] + '_'
+        print(firstName)
         #check tu nao dang mo
         if (firstName[0]=='L' and tuOpenedLeft != "0") or (firstName[0]=='R' and tuOpenedRight != "0") :
             "co tu dang mo"
@@ -575,7 +572,10 @@ class OpenTuThread(threading.Thread,DongMoTu):
                 return True
         else:
             "ko co tu nao dang mo tat ca cac tu deu dong"
-            tuK = numClientLeft
+            if firstName[0]=='L' :
+                tuK = numClientLeft
+            else :
+                tuK = numClientRight
             tuDau = tuK
             while tuK >= self.numberTu :    
                 nameTu = firstName + str(tuK)
@@ -803,13 +803,13 @@ class CloseTuThreadVer2(threading.Thread,DongMoTu):
             dataSent2Client[nameTu].dt2Pi2Ar[2] = 0x02
             dataSent2Client[nameTu].dt2Pi2Ar[5] = 0x00           
             self.sendMes2Client(nameTu,b'\xbb\xbb'+bytes(dataSent2Client[nameTu].dt2Pi2Ar))
-            tuKLeft+=1
+            tuKRight+=1
             if isWaiting == 2 and self.isCheckedError : #neu waiting==2(dung khan cap) trong truong hop co kiem tra su co
                 return False
             time.sleep(self.timeMiliSecond)
 
         #waiting cac tu dong xong
-        while tuDauLeft <= numClientLeft and tuDauRight <= numClientRight:
+        while tuDauLeft <= numClientLeft or tuDauRight <= numClientRight:
             nameTuLeft = "Left_" + str(tuDauLeft)
             nameTuRight = "Right_" + str(tuDauRight)
             while True :
@@ -917,6 +917,7 @@ def playmp3(nameFile):
     except Exception as e :
         print("error in playmp3" + str(e))
 
+
 def checkComVanTay():
     global usbFinger, usbDieuHoa
     import serial 
@@ -948,6 +949,7 @@ def checkComVanTay():
 #check cam bien van tay ngay khi van hanh de doi cong com
 thCheckVanTay = threading.Thread(target=checkComVanTay)
 thCheckVanTay.start()
+
 
 InitData()
 #print(dataSent2Client)

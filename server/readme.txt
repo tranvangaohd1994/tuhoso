@@ -35,7 +35,61 @@ server 2 client:
     1d 1d : thong gio
     fa fa : server gui cai dat thoi gian cho client
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+20181115:
+    thuc hien dong mo tu ben phai( luc moi vao vaf o giao dien chinh) --> con thong gio va su co chay
 20181023:
     lam hien thi do thi nhiet do va do am len do thi logTemp
     

@@ -104,7 +104,7 @@ class Ui_Dialog(QDialog):
         self.setEvent()
 
     def setEvent(self):
-        self.grcdControl.setvisible(self.showGroup)
+        self.grcdControl.setVisible(self.showGroup)
         self.btEnter.clicked.connect(self.btEnter_click)
         self.bt0.clicked.connect(self.bt0_click)
         self.bt1.clicked.connect(self.bt1_click)

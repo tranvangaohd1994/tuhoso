@@ -414,8 +414,8 @@ class Ui_SV_mainDisplay(object):
         else:
             self.buttonTimer()
         #chon dong tu ben nao
-        dialogKey, server.tuTraiPhai = Ui_Dialog(10,True)
-        value = dialogKey.exec_()
+        dialogKey = Ui_Dialog(10,True)
+        value, server.tuTraiPhai = dialogKey.exec_()
         print("bt dong tu clicked")
         if server.isWaiting != 1:
             server.dongMoTuFunction(0,0)
@@ -440,13 +440,13 @@ class Ui_SV_mainDisplay(object):
         else:
             self.buttonTimer()
 
-        dialogKey, server.tuTraiPhai = Ui_Dialog(10,True)
-        value = dialogKey.exec_()
+        dialogKey = Ui_Dialog(10,True)
+        value , server.tuTraiPhai= dialogKey.exec_()
         if value == '0':
             return
-        if server.tuTraiPhai == 'L' and value <= server.numClientLeft:
+        if server.tuTraiPhai == 'L' and int(value) <= server.numClientLeft:
             nameTu = "Left_"+str(value)
-        elif server.tuTraiPhai == 'R' and value <= server.numClientRight :
+        elif server.tuTraiPhai == 'R' and int(value) <= server.numClientRight :
             nameTu = "Right_" + str(value)
         else:
             return
