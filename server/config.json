@@ -21,5 +21,11 @@
         "Right_6":"192.168.0.122",
         "Right_7":"192.168.0.124",
         "Right_8":"192.168.0.126"
+    },
+    "DkVanHanh":{
+        "tempMin": 15,
+        "tempMax":40,
+        "humiMin" : 50,
+        "humiMax": 98
     }
 }

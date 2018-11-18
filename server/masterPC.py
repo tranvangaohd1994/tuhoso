@@ -30,16 +30,26 @@ class ServerPC(threading.Thread):
             while True:
                 try :
                     data = conn.recv(3)
+                    dt = conn.recv(2)
                     if len(data) == 3 and data[0] == 0xff:
-                        if data[1] == 0x01 and data[2] <= server.numClientLeft :
-                            dt = conn.recv(2)
+                        if data[1] == 1 : # chon tu ben trai:
+                            nameTu = "Left_"
+                            server.tuTraiPhai = 'L'
+                        elif data[1] == 2 :
+                            nameTu = "Right_"
+                            server.tuTraiPhai = 'R'
+                        else :
+                            print("recive Frame tu server bi sai form", data)
+                            continue
 
-                            if data[2] == 0x00:
-                                if len(dt)==2 and dt[0] ==0xab and dt[1]== 0xab:
+                        if (data[2] <= server.numClientLeft and data[1] == 1 ) or (data[2] <= server.numClientRight and data[1] == 2) :
+                            
+                            if data[2] == 0x00: # 00 la tu Master
+                                if len(dt)==2 and dt[0] ==0xab and dt[1]== 0xab: #cap nhat thong tin tu
                                     dtSend = b'\xaa\xaa'+ bytearray(uart.dataReceved.myList)+ b'\x00\x00'
                                     conn.send(dtSend)
                             else:
-                                nameTu = "Left_"+str(int(data[2]))
+                                nameTu = nameTu + str(int(data[2]))
                                 if len(dt)==2 and dt[0] ==0xAA:
                                     if dt[1] == 0x01 :
                                         server.dongMoTuFunction(0,0)
@@ -50,12 +60,12 @@ class ServerPC(threading.Thread):
                                             server.dongMoTuFunction(1,nameTu)
                                     elif dt[1] == 0x03:
                                         server.serverMain.sentStop2AllClient()
-                                if len(dt)==2 and dt[0] ==0xab and dt[1]== 0xab:
+                                if len(dt)==2 and dt[0] ==0xab and dt[1]== 0xab:  #cap nhat thong tin tu trai phai
                                     dtSend = b'\xaa\xaa'+ bytearray(server.dataReceivedSer[nameTu].myList)+ b'\x00\x00'
                                     conn.send(dtSend)
                     if not data:
                         conn.close()
-                        print("Client masterPC exit")
+                        print("Client masterPC exit or connection error")
                         break
 
                 except Exception as e:

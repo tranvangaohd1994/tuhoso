@@ -470,8 +470,13 @@ class Ui_SV_mainDisplay(object):
             return
         else:
             self.buttonTimer()
-        byKC = server.dataSent2Client["Left_1"].dt2Pi2Ar[3]
-        disAvg = int( byKC/server.numClientLeft )
+        
+        if server.numClientLeft > 0 :
+            byKC = server.dataSent2Client["Left_1"].dt2Pi2Ar[3]
+            disAvgLeft = int( byKC/server.numClientLeft )
+        if server.numClientRight > 0
+            byKC = server.dataSent2Client["Right_1"].dt2Pi2Ar[3]
+            disAvgRight = int( byKC/server.numClientRight )
         
         
         if self.numThongGio == 0 :
@@ -483,10 +488,15 @@ class Ui_SV_mainDisplay(object):
                 time.sleep(0.3)
                 for i in range(1,server.numClientLeft+1):
                     nameTu = "Left_"+str(i)
-                    byteKC = struct.pack('B',disAvg*i)
+                    byteKC = struct.pack('B',disAvgLeft*i)
                     server.serverMain.sendMes2Client(nameTu,b'\x1d\x1d\x01'+byteKC)
+                for i in range(1,server.numClientRight+1):
+                    nameTu = "Right_"+str(i)
+                    byteKC = struct.pack('B',disAvgRight*i)
+                    server.serverMain.sendMes2Client(nameTu,b'\x1d\x1d\x01'+byteKC)
+
                 self.btThongGio.setText("Tắt\nThông gió")
-                self.numThongGio = -3
+                self.numThongGio = -3 #da thuc thi thong gio
             else :
                 #dong tu truoc khi thong gio
                 self.numThongGio = 1
@@ -499,7 +509,11 @@ class Ui_SV_mainDisplay(object):
             server.playmp3(self.linkFile)    
             for i in range(1,server.numClientLeft+1):
                 nameTu = "Left_"+str(i)
-                byteKC = struct.pack('B',disAvg*i)
+                byteKC = struct.pack('B',disAvgLeft*i)
+                server.serverMain.sendMes2Client(nameTu,b'\x1d\x1d\x01'+byteKC)
+            for i in range(1,server.numClientRight+1):
+                nameTu = "Right_"+str(i)
+                byteKC = struct.pack('B',disAvgRight*i)
                 server.serverMain.sendMes2Client(nameTu,b'\x1d\x1d\x01'+byteKC)
             self.btThongGio.setText("Tắt\nThông gió")
             self.numThongGio = -3
@@ -509,8 +523,13 @@ class Ui_SV_mainDisplay(object):
             server.playmp3(self.linkFile)
             for i in range(1,server.numClientLeft+1):
                 nameTu = "Left_"+str(i)
-                byteKC = struct.pack('B',disAvg*i)
+                byteKC = struct.pack('B',disAvgLeft*i)
                 server.serverMain.sendMes2Client(nameTu,b'\x1d\x1d\x00'+byteKC)
+            for i in range(1,server.numClientRight+1):
+                nameTu = "Right_"+str(i)
+                byteKC = struct.pack('B',disAvgRight*i)
+                server.serverMain.sendMes2Client(nameTu,b'\x1d\x1d\x00'+byteKC)
+
             time.sleep(1)
             #sau khi thong gio xong gui lenh dong tu
             server.tuTraiPhai = 'A'

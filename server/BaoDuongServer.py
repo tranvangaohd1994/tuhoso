@@ -88,7 +88,6 @@ class Ui_BaoDuongServer(object):
         self.setEvent()
 
     def setEvent(self):
-        tuK = 1
         linkFile = server.folderMP3 + "017.mp3"
         server.playmp3(linkFile)
         print("close tu left start")
@@ -108,7 +107,10 @@ class Ui_BaoDuongServer(object):
         self.caseBD = 0
         server.caseBD = 0
         self.flagFirst = True
+        #dong tat ca cac tu truoc khi bao duong
+        server.tuTraiPhai = 'A'
         server.dongMoTuFunction(0,1)
+
         for lb in self.listlb :
             lb.hide()
         self.btThoat.clicked.connect(self.btExit_click)
@@ -116,6 +118,11 @@ class Ui_BaoDuongServer(object):
         self.ctimer.timeout.connect(self.checkTimer)
         self.ctimer.start(400)
         self.Tu = server.numClientLeft
+        self.statusTu = 2 # 2 ben trai 1 ben phai 0 master
+        if self.Tu == 0: #ko co tu ben trai
+            self.Tu = server.numClientRight
+            self.statusTu = 1 # 2 ben trai 1 ben phai 0 master
+        
 
     def checkTimer(self):
         if self.flagFirst :
@@ -135,7 +142,7 @@ class Ui_BaoDuongServer(object):
             if server.caseBD > self.caseBD :
                 self.btTiepTuc_click()
             
-            if self.caseBD == 1 or self.caseBD == 2 or (self.caseBD >= 6 and self.Tu == 0):
+            if self.caseBD == 1 or self.caseBD == 2 or (self.caseBD >= 6 and self.Tu == 0 and self.statusTu == 0): #bao duong tren master
                 if uart.caseBDIsACK == 0 :
                     self.lbValue.setText("Waiting")
                 elif uart.caseBDIsACK == 1 :
@@ -163,8 +170,13 @@ class Ui_BaoDuongServer(object):
             server.caseBD = 4
             self.Tu -= 1
             if self.Tu == 0:
-                self.caseBD = 2
-                server.caseBD = 2
+                if self.statusTu == 2:
+                    self.statusTu -= 1
+                    self.Tu = server.numClientRight #kiem tra xong tu ben trai chuyen sang tu ben phai
+                elif self.statusTu == 1:
+                    self.statusTu -= 1 
+                    self.caseBD = 2
+                    server.caseBD = 2
         
         self.caseBD += 1
         server.caseBD = self.caseBD
@@ -183,6 +195,9 @@ class Ui_BaoDuongServer(object):
             for i in range(1,server.numClientLeft+1):
                 nameTu = "Left_"+str(i)
                 server.serverMain.sendMes2Client(nameTu ,b'\xbd\xbd'+data)
+            for i in range(1,server.numClientRight+1):
+                nameTu = "Right_"+str(i)
+                server.serverMain.sendMes2Client(nameTu ,b'\xbd\xbd'+data)
             uart.caseBDIsACK = 0
             uart.sentDataRandom(b'\xbd\xbd',b'\x1f\x00\x00\x00\x00\x00\x00\x00')
             time.sleep(0.5)
@@ -193,10 +208,20 @@ class Ui_BaoDuongServer(object):
             for i in range(1,server.numClientLeft+1):
                 nameTu = "Left_"+str(i)
                 server.serverMain.sendMes2Client(nameTu ,b'\xbd\xbd'+data)
+            for i in range(1,server.numClientRight+1):
+                nameTu = "Right_"+str(i)
+                server.serverMain.sendMes2Client(nameTu ,b'\xbd\xbd'+data)
 
         if self.caseBD == 5 and self.Tu > 0:
             #sent mo tu ngoai cung
-            nameTu = "Left_"+str(self.Tu) 
+            if self.statusTu == 2 :
+                firstNameTu = "Left_"
+            else :
+                firstNameTu = "Right_"
+
+            nameTu = firstNameTu + str(self.Tu) 
+            
+            server.tuTraiPhai = nameTu[0]
             server.dongMoTuFunction(3,nameTu)
             numInLoop = 0
             while server.dataReceivedSer[nameTu].statusMotor != 2:
@@ -210,13 +235,16 @@ class Ui_BaoDuongServer(object):
             server.playmp3(linkFile)
             time.sleep(2)
             data = struct.pack('B',self.caseBD)
-            nameTu = "Left_"+ str(self.Tu)
             server.serverMain.sendMes2Client(nameTu ,b'\xbd\xbd'+data)
             return
 
         if self.caseBD >= 5 and self.Tu > 0:
             data = struct.pack('B',self.caseBD)
-            nameTu = "Left_"+ str(self.Tu)
+            if self.statusTu == 2 :
+                firstNameTu = "Left_"
+            else :
+                firstNameTu = "Right_"
+            nameTu = firstNameTu + str(self.Tu) 
             server.serverMain.sendMes2Client(nameTu ,b'\xbd\xbd'+data)
 
         if  self.Tu == 0:
@@ -248,6 +276,9 @@ class Ui_BaoDuongServer(object):
         server.caseBD = 0
         for i in range(1,server.numClientLeft+1):
             nameTu = "Left_"+str(i)
+            server.serverMain.sendMes2Client(nameTu ,b'\xbd\xbd\xff')
+        for i in range(1,server.numClientRight+1):
+            nameTu = "Right_"+str(i)
             server.serverMain.sendMes2Client(nameTu ,b'\xbd\xbd\xff')
 
         uart.sentDataRandom(b'\xbd\xbd',b'\x1f\x00\x00\x00\x00\x00\x00\x00')

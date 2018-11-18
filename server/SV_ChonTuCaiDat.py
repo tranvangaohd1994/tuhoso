@@ -98,7 +98,7 @@ class Ui_SVChonClient(object):
         self.window.show()
         if server.isFullSceen:
             self.window.showFullScreen()
-        #dong form này lại---dong tu lan dau
+        #dong form này lại---dong tu lan dau dong ca 2 ban 
         server.tuTraiPhai = 'A' # dong ca 2 ben tu
         server.dongMoTuFunction(0,0)
         self.SVChonClient.close()
