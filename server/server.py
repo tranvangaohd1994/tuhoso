@@ -718,6 +718,7 @@ class MoTuTongQuat(threading.Thread,DongMoTu):
                 if self.stopped or ( isWaiting != 1 and self.isCheckedError):
                     return False
 
+
             if flagDoneClose == False and  dataReceivedSer[nameTuClose].statusMotor == 4 :
                 tuDauClose += 1
                 if tuDauClose >=  self.numberTu :
@@ -731,6 +732,8 @@ class MoTuTongQuat(threading.Thread,DongMoTu):
                     flagDoneOpen = True
                 else:
                     flagLoop = True
+            if (tuDauClose < self.numberTu and dataReceivedSer[nameTuClose].statusMotor != 4 ) or ( tuDauOpen >= self.numberTu and dataReceivedSer[nameTuOpen].statusMotor != 2):
+                flagLoop = True
             time.sleep(self.timeMiliSecond)
         return True
 

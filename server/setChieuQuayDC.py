@@ -64,11 +64,9 @@ class Ui_setChieuQuayDC(object):
     def retranslateUi(self, setChieuQuayDC):
         _translate = QtCore.QCoreApplication.translate
         setChieuQuayDC.setWindowTitle(_translate("setChieuQuayDC", "Form"))
-        if self.isLeft :
-            self.label.setText(_translate("setChieuQuayDC", "Cài đặt chiều quay động cơ tủ bên trái"))
-        else :
-            self.label.setText(_translate("setChieuQuayDC", "Cài đặt chiều quay động cơ tủ bên phải"))
-            
+        
+        self.label.setText(_translate("setChieuQuayDC", "Cài đặt chiều quay động cơ tủ bên trái"))
+    
         self.btSave.setText(_translate("setChieuQuayDC", "Lưu"))
         self.btExit.setText(_translate("setChieuQuayDC", "Thoát"))
         self.label_5.setText(_translate("setChieuQuayDC", "Hướng dẫn"))
@@ -81,10 +79,13 @@ class Ui_setChieuQuayDC(object):
 
     def setEvent(self):
         #initValue
-        if self.isLeft :
+        if server.numClientLeft > 0 :
             nameTu = "Left_1"
-        else :
+        elif server.numClientRight > 0 :
             nameTu = "Right_1"
+        else:
+            print("Error in setChieuQuayDC")
+            return
         
         if server.dataSent2Client[nameTu].dt2Pi2Ar[1] == 1 :
             self.rbstSpinRight.setChecked(True)

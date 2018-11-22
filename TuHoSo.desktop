@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Name=TuHoSo
+Comment=TuHoSo Project
+Exec=python3 /home/pi/Desktop/client/welcome.py
+Icon=/home/pi/Desktop/client/tree.ico
+Terminal=true
+Type=Application
+Categories=Application;
+
+#ps -fA | grep python3
+#kill 620
+Name[en_US]=TuHoSo.desktop

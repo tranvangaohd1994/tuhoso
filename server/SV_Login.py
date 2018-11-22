@@ -41,21 +41,21 @@ class Ui_SVLogin(object):
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
         self.lbtitle = QtWidgets.QLabel(self.frame)
-        self.lbtitle.setGeometry(QtCore.QRect(420, 130, 471, 71))
+        self.lbtitle.setGeometry(QtCore.QRect(400, 130, 471, 71))
         self.lbtitle.setAlignment(QtCore.Qt.AlignCenter)
         self.lbtitle.setObjectName("lbtitle")
         self.btBack = QtWidgets.QPushButton(self.frame)
-        self.btBack.setGeometry(QtCore.QRect(590, 530, 191, 101))
+        self.btBack.setGeometry(QtCore.QRect(570, 530, 191, 101))
         self.btBack.setObjectName("btBack")
         self.tbInput = MyQLineEdit(self.frame)
-        self.tbInput.setGeometry(QtCore.QRect(450, 330, 421, 71))
+        self.tbInput.setGeometry(QtCore.QRect(430, 330, 421, 71))
         self.tbInput.setObjectName("tbInput")
         self.lbtitle2 = QtWidgets.QLabel(self.frame)
-        self.lbtitle2.setGeometry(QtCore.QRect(480, 260, 381, 61))
+        self.lbtitle2.setGeometry(QtCore.QRect(160, 260, 381, 61))
         self.lbtitle2.setAlignment(QtCore.Qt.AlignCenter)
         self.lbtitle2.setObjectName("lbtitle2")
         self.lbThongBao = QtWidgets.QLabel(self.frame)
-        self.lbThongBao.setGeometry(QtCore.QRect(180, 440, 961, 51))
+        self.lbThongBao.setGeometry(QtCore.QRect(160, 440, 961, 51))
         self.lbThongBao.setAlignment(QtCore.Qt.AlignCenter)
         self.lbThongBao.setObjectName("lbThongBao")
         
@@ -69,7 +69,7 @@ class Ui_SVLogin(object):
         SV_Login.setWindowTitle(_translate("SV_Login", "Form"))
         self.lbtitle.setText(_translate("SV_Login", "Giao diện quản lý"))
         self.btBack.setText(_translate("SV_Login", "Quay lại"))
-       
+        self.lbThongBao.setText("Có thể quẹt thẻ RFID hoặc quét vân tay")
         self.lbtitle2.setText(_translate("SV_Login", "Nhập mật khẩu"))
 
         self.setEvent()
@@ -85,7 +85,7 @@ class Ui_SVLogin(object):
         self.isRunRFID = True
         self.ctimer = QTimer(self.frame)
         self.ctimer.timeout.connect(self.checkScanOK)
-        self.ctimer.start(300)
+        self.ctimer.start(10)
         
 
         
@@ -112,6 +112,7 @@ class Ui_SVLogin(object):
             else :
                 self.runScan()
                 self.isRunRFID = True
+
     def runScan(self):
                     
         try:
@@ -168,31 +169,34 @@ class Ui_SVLogin(object):
 
     def runRFID(self):
         print("Starting RFID")
-        try:
-            util = self.rdr.util()
-            #rdr.wait_for_tag()
+        loop = 5
+        while loop > 0 and self.isRun:
+            loop -= 1
+            try:
+                util = self.rdr.util()
+                #rdr.wait_for_tag()
 
-            (error, data) = self.rdr.request()
-            if not error:
-                print("\nDetected: " + format(data, "02x"))
+                (error, data) = self.rdr.request()
+                if not error:
+                    print("\nDetected: " + format(data, "02x"))
 
-            (error, uid) = self.rdr.anticoll()
-            if not error:
-                print("Card read UID: "+str(uid[0])+","+str(uid[1])+","+str(uid[2])+","+str(uid[3]))
-                print("Setting tag")
-                util.set_tag(uid)
-                print("\nAuthorizing")
-                #util.auth(rdr.auth_a, [0x12, 0x34, 0x56, 0x78, 0x96, 0x92])
-                util.auth(self.rdr.auth_b, [0x74, 0x00, 0x52, 0x35, 0x00, 0xFF])
-                print("\nReading")
-                util.read_out(4)
-                print("\nDeauthorizing")
-                util.deauth()
-                #set active open new form
-                self.isRun = False
-            time.sleep(0.2)
-        except Exception as e:
-            print('Exception RFID: ' + str(e))
+                (error, uid) = self.rdr.anticoll()
+                if not error:
+                    print("Card read UID: "+str(uid[0])+","+str(uid[1])+","+str(uid[2])+","+str(uid[3]))
+                    print("Setting tag")
+                    util.set_tag(uid)
+                    print("\nAuthorizing")
+                    #util.auth(rdr.auth_a, [0x12, 0x34, 0x56, 0x78, 0x96, 0x92])
+                    util.auth(self.rdr.auth_b, [0x74, 0x00, 0x52, 0x35, 0x00, 0xFF])
+                    print("\nReading")
+                    util.read_out(4)
+                    print("\nDeauthorizing")
+                    util.deauth()
+                    #set active open new form
+                    self.isRun = False
+                time.sleep(0.01)
+            except Exception as e:
+                print('Exception RFID: ' + str(e))
 
     def tbInput_click(self):
         dialogKey = Ui_Keyboard()

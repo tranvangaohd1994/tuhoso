@@ -74,10 +74,12 @@ class Ui_FormWaiting(object):
 
         if server.isFlag2906 == False and self.NumWaiting < (2000 / self.Gaptimer ) : #time out toi da 2s
             return
-            
+        
+        time.sleep(0.01)
         #phat hien qua dong he thong dung khan cap
         if server.serverMain.checkQuaDong() :
             self.linkFile = server.folderMP3 + "018.mp3"
+            print("form waiting : Bao ve chong ket")
             self.btStop_clicked()
             return
         

@@ -474,7 +474,7 @@ class Ui_SV_mainDisplay(object):
         if server.numClientLeft > 0 :
             byKC = server.dataSent2Client["Left_1"].dt2Pi2Ar[3]
             disAvgLeft = int( byKC/server.numClientLeft )
-        if server.numClientRight > 0
+        if server.numClientRight > 0:
             byKC = server.dataSent2Client["Right_1"].dt2Pi2Ar[3]
             disAvgRight = int( byKC/server.numClientRight )
         
