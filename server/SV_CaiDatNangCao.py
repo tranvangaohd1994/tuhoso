@@ -153,9 +153,9 @@ class Ui_SVCaiDatNangCao(object):
         self.ui = Ui_setChieuQuayDC()
         self.window = QtWidgets.QMainWindow()
         if server.numClientLeft > 0 :
-            self.ui.setupUi(self.window,True)
+            self.ui.setupUi(self.window)
         else :
-            self.ui.setupUi(self.window,False)
+            self.ui.setupUi(self.window)
         self.window.show()
         if server.isFullSceen :
             self.window.showFullScreen()

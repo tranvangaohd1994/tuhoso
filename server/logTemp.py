@@ -40,17 +40,23 @@ class PlotCanvas(FigureCanvas):
                 QSizePolicy.Expanding)
         FigureCanvas.updateGeometry(self)
         
- 
     def plot(self,istemp,dtIn,dtOut,dtX):
         
         ax = self.figure.add_subplot(111)
         ax.clear()
-        ax.plot(dtX,dtIn, 'r-',color='skyblue',label='Trong tủ')
-        ax.plot(dtX,dtOut, 'r-',color='red',label='Ngoài tủ')
+        
+        ax.plot( dtIn, 'r-',color='skyblue',label='Trong tủ')
+        ax.plot( dtOut, 'r-',color='red',label='Ngoài tủ')
+        
+        labels = [item.get_text() for item in ax.get_xticklabels()]
+        numStep = int(len(dtX) / len(labels)) + 1
+        if numStep > 0 :
+            j=0
+            for i in range(0, len(dtX),numStep):
+                labels[j] = dtX[i]
+                j+=1        
         ax.legend(loc=1)
-
-        for tick in ax.get_xticklabels():
-            tick.set_rotation(45)
+        ax.set_xticklabels(labels,rotation=45)
 
         if istemp:
             ax.set_title("Nhiệt độ")
@@ -238,19 +244,22 @@ class Ui_SV_LogTemp(object):
             else:
                 dt = line.split(' ')
                 if dt[0] == date and dt[3] == nameTu :
-                    if self.seeTemp :
-                        dtIn.append(dt[4])
-                        dtOut.append(dt[6])
-                    else :
-                        dtIn.append(dt[5])
-                        dtOut.append(dt[7])
-                    dtx = dt[1].split(':')
-                    dtX.append(dtx[0]+":"+dtx[1])
+                    if float(dt[4]) < 100 and  float(dt[5]) < 100 and float(dt[6])<100 and float(dt[7]) < 100 :
+                        if self.seeTemp :
+                            dtIn.append(float(dt[4]))
+                            dtOut.append(float(dt[6]))
+                        else :
+                            dtIn.append(float(dt[5]))
+                            dtOut.append(float(dt[7]))
+                        dtx = dt[1].split(':')
+                        dtX.append(dtx[0]+":"+dtx[1])
+        #print(dtIn, dtX)
         return dtIn, dtOut , dtX
 
 import resources
-
 """
+
+
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
@@ -259,5 +268,4 @@ if __name__ == "__main__":
     ui.setupUi(SV_Login)
     SV_Login.show()
     sys.exit(app.exec_())
-
 """

@@ -12,8 +12,6 @@ from mainDisplay import Ui_SV_mainDisplay
 from PyQt5.QtCore import Qt,QSize, QTimer, pyqtSignal,QRect,QDateTime,QDate
 import sys
 import client
-import uart
-
 
 class MyQFrame(QtWidgets.QFrame):
     #
@@ -26,13 +24,12 @@ class Ui_welcomeForm(object):
     def setupUi(self, welcomeForm):
         welcomeForm.setObjectName("welcomeForm")
         welcomeForm.setWindowTitle("welcomeClient")
-        welcomeForm.resize(1024, 600)
+        welcomeForm.resize(1280, 800)
         self.welcomeForm = welcomeForm
         self.frame = MyQFrame(welcomeForm)
-        self.frame.setGeometry(QtCore.QRect(0, 0, 1024, 600))
+        self.frame.setGeometry(QtCore.QRect(0, 0, 1280, 800))
         self.frame.setStyleSheet(".MyQFrame{background-image: url(:/images/welcome.jpg);}")
         self.frame.clicked.connect(self.frame_click)
-
         #endUI
         self.setEvent()
 
@@ -57,7 +54,7 @@ class Ui_welcomeForm(object):
         if client.isExitApp :
             client.isSent2Ser = False
             client.isListeningSer =False
-            uart.isRead =False
+            client.isRead =False
             self.welcomeForm.close()
             sys.exit()
         #neu co ket noi den server thi gui data cho server
@@ -68,7 +65,7 @@ class Ui_welcomeForm(object):
         if(client.ThClientMain.numClick2close == 5) :
             client.isSent2Ser = False
             client.isListeningSer =False
-            uart.isRead =False
+            client.isRead =False
             self.welcomeForm.close()
             sys.exit()
 
@@ -76,12 +73,15 @@ import resources
 
 if __name__ == "__main__":
     
-    app = QtWidgets.QApplication(sys.argv)
-    welcomeForm = QtWidgets.QWidget()
-    ui = Ui_welcomeForm()
-    ui.setupUi(welcomeForm)
-    welcomeForm.show()
-    if client.isFullScreen:
-        welcomeForm.showFullScreen()
-    sys.exit(app.exec_())
-
+    try:
+        app = QtWidgets.QApplication(sys.argv)
+        welcomeForm = QtWidgets.QWidget()
+        ui = Ui_welcomeForm()
+        ui.setupUi(welcomeForm)
+        welcomeForm.show()
+        if client.isFullScreen:
+            welcomeForm.showFullScreen()
+        sys.exit(app.exec_())
+    except Exception as e :
+        client.loggerInfor.info('ERROR IN mainDisplay->showTemp : ', e.__doc__)
+        

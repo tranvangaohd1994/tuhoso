@@ -7,9 +7,23 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-import server
-from fKetQuaTraCuu import Ui_fKetQuaTraCuu
+from PyQt5.QtCore import QTimer,pyqtSignal,QEventLoop
+import struct
+import time
 
+import server
+import masterPC
+
+from keyboard import Ui_Keyboard
+from fKetQuaTraCuu import Ui_fKetQuaTraCuu
+from kbNumber import Ui_Dialog
+
+
+class MyQLineEdit(QtWidgets.QLineEdit):
+    clicked = pyqtSignal()
+    def mousePressEvent(self,event):
+        self.clicked.emit()
+        QtWidgets.QLineEdit.mousePressEvent(self, event)
 
 class Ui_formTimKiem(object):
     def setupUi(self, formTimKiem):
@@ -19,7 +33,7 @@ class Ui_formTimKiem(object):
         self.formTimKiem = formTimKiem
         self.frame = QtWidgets.QFrame(formTimKiem)
         self.frame.setGeometry(QtCore.QRect(0, 0, 12800, 800))
-        self.frame.setStyleSheet(".QFrame{background-image: url(:/images/darkbg.jpg);}.QPushButton:pressed { background-color: #4164ff}.QPushButton{border-radius: 18px;background-color: #FFC107;font: 75 18pt \"Arial\";}.QLabel{color:#FF8F00;font: 75 30pt \"Arial\";}.QLineEdit{background-color:#B2FF59;font: 75 32pt \"Arial\";}")
+        self.frame.setStyleSheet(".QFrame{background-image: url(:/images/darkbg.jpg);}.QPushButton:pressed { background-color: #4164ff}.QPushButton{border-radius: 18px;background-color: #FFC107;font: 75 18pt \"Arial\";}.QLabel{color:#FF8F00;font: 75 30pt \"Arial\";}.MyQLineEdit{background-color:#B2FF59;font: 75 32pt \"Arial\";}")
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
@@ -34,7 +48,7 @@ class Ui_formTimKiem(object):
         self.btExit = QtWidgets.QPushButton(self.frame)
         self.btExit.setGeometry(QtCore.QRect(1020, 640, 161, 111))
         self.btExit.setObjectName("btExit")
-        self.tbTimKiem = QtWidgets.QLineEdit(self.frame)
+        self.tbTimKiem = MyQLineEdit(self.frame)
         self.tbTimKiem.setGeometry(QtCore.QRect(590, 530, 671, 61))
         font = QtGui.QFont()
         font.setFamily("Arial")
@@ -49,7 +63,7 @@ class Ui_formTimKiem(object):
         self.label_6.setStyleSheet("")
         self.label_6.setAlignment(QtCore.Qt.AlignCenter)
         self.label_6.setObjectName("label_6")
-        self.tbNam = QtWidgets.QLineEdit(self.frame)
+        self.tbNam = MyQLineEdit(self.frame)
         self.tbNam.setGeometry(QtCore.QRect(1020, 270, 101, 61))
         
         self.tbNam.setFont(font)
@@ -117,7 +131,19 @@ class Ui_formTimKiem(object):
     def setEvent(self):
         self.btExit.clicked.connect(self.formTimKiem.close)
         self.btTraCuu.clicked.connect(self.btTraCuu_click)
+        self.tbTimKiem.clicked.connect(self.tbTimKiem_click)
+        self.tbNam.clicked.connect(self.tbNam_click)
+        
+    def tbNam_click(self):
+        dialogKey = Ui_Dialog(20,False)
+        value = dialogKey.exec_()
+        self.tbTimKiem.setText(value)
 
+    def tbTimKiem_click(self):
+        dialogKey = Ui_Keyboard()
+        value = dialogKey.exec_()
+        self.tbTimKiem.setText(value)
+    
     def setWindow(self):
         self.window = QtWidgets.QMainWindow()
         self.ui.setupUi(self.window)
@@ -126,8 +152,24 @@ class Ui_formTimKiem(object):
             self.window.showFullScreen()
 
     def btTraCuu_click(self):
+        self.sentTimKiem2PC()
+
         self.ui = Ui_fKetQuaTraCuu()
         self.setWindow()
+
+    def sentTimKiem2PC(self): # tam toi send tim kiem tong quat den PC
+        if masterPC.ServerPC.isConnectPC :
+            masterPC.ServerPC.csdl = []
+            header = b'\x23\x23\x23\x31\x32\x61'
+            data = str(self.tbTimKiem.text())
+            lenData = struct.pack('I', int(len(data)))
+            header = header + lenData + b'\x00\x00' # 2 byte cuoi la CRC
+            if len(header) == 12 :
+                header += data.encode()
+                masterPC.ServerPC.conn.send(header)
+                print("sent yeu cau den PC : ", header )
+                time.sleep(0.2)
+        
 
 import resources
 

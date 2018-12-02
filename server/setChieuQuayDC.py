@@ -12,8 +12,7 @@ from kbNumber import MSG_Dialog
 import server
 
 class Ui_setChieuQuayDC(object):
-    def setupUi(self, setChieuQuayDC,isLeft):
-        self.isLeft = isLeft# kiem tra co phai cai dat cac tu ben trai hay khong
+    def setupUi(self, setChieuQuayDC):
         setChieuQuayDC.setObjectName("setChieuQuayDC")
         setChieuQuayDC.resize(1280, 800)
         setChieuQuayDC.setStyleSheet("")
@@ -44,13 +43,13 @@ class Ui_setChieuQuayDC(object):
         self.grcdControl.setStyleSheet("QLabel{color: rgb(255, 255, 255);font: 75 20pt \"Arial\";}.QRadioButton{font: 75 20pt \"Arial\";color: white;background-color: #55007f;}.QRadioButton::indicator{width: 20px;height: 20px;}")
         self.grcdControl.setTitle("")
         self.grcdControl.setObjectName("grcdControl")
-        self.rbstSpinRight = QtWidgets.QRadioButton(self.grcdControl)
-        self.rbstSpinRight.setGeometry(QtCore.QRect(310, 10, 191, 100))
-        self.rbstSpinRight.setObjectName("rbstSpinRight")
-        self.rbstSpinLeft = QtWidgets.QRadioButton(self.grcdControl)
-        self.rbstSpinLeft.setGeometry(QtCore.QRect(30, 10, 201, 100))
-        self.rbstSpinLeft.setChecked(True)
-        self.rbstSpinLeft.setObjectName("rbstSpinLeft")
+        self.rbQuayThuan = QtWidgets.QRadioButton(self.grcdControl)
+        self.rbQuayThuan.setGeometry(QtCore.QRect(310, 10, 191, 100))
+        self.rbQuayThuan.setObjectName("rbQuayThuan")
+        self.rbQuayNghich = QtWidgets.QRadioButton(self.grcdControl)
+        self.rbQuayNghich.setGeometry(QtCore.QRect(30, 10, 201, 100))
+        self.rbQuayNghich.setChecked(True)
+        self.rbQuayNghich.setObjectName("rbQuayNghich")
         self.label_6 = QtWidgets.QLabel(self.frame)
         self.label_6.setGeometry(QtCore.QRect(100, 250, 701, 50))
         self.label_6.setStyleSheet("")
@@ -70,8 +69,8 @@ class Ui_setChieuQuayDC(object):
         self.btSave.setText(_translate("setChieuQuayDC", "Lưu"))
         self.btExit.setText(_translate("setChieuQuayDC", "Thoát"))
         self.label_5.setText(_translate("setChieuQuayDC", "Hướng dẫn"))
-        self.rbstSpinRight.setText(_translate("setChieuQuayDC", "Quay Thuận"))
-        self.rbstSpinLeft.setText(_translate("setChieuQuayDC", "Quay Nghịch"))
+        self.rbQuayThuan.setText(_translate("setChieuQuayDC", "Quay Thuận"))
+        self.rbQuayNghich.setText(_translate("setChieuQuayDC", "Quay Nghịch"))
 
         self.label_6.setText(_translate("setChieuQuayDC", "Cài đặt chiều quay động cơ mở tủ"))
 
@@ -87,21 +86,38 @@ class Ui_setChieuQuayDC(object):
             print("Error in setChieuQuayDC")
             return
         
-        if server.dataSent2Client[nameTu].dt2Pi2Ar[1] == 1 :
-            self.rbstSpinRight.setChecked(True)
-        elif server.dataSent2Client[nameTu].dt2Pi2Ar[1]  == 2:
-            self.rbstSpinLeft.setChecked(True)
+        if ( (nameTu[0] == 'L' and server.dataSent2Client[nameTu].dt2Pi2Ar[1] == 1) 
+            or (nameTu[0] == 'R' and server.dataSent2Client[nameTu].dt2Pi2Ar[1] == 2) ) :
+            self.rbQuayThuan.setChecked(True)
+        elif ( (nameTu[0] == 'R' and server.dataSent2Client[nameTu].dt2Pi2Ar[1] == 1) 
+            or (nameTu[0] == 'L' and server.dataSent2Client[nameTu].dt2Pi2Ar[1] == 2) ) :
+
+            self.rbQuayNghich.setChecked(True)
         else :
-            self.rbstSpinLeft.setChecked(False)
-            self.rbstSpinRight.setChecked(False)
+            self.rbQuayNghich.setChecked(False)
+            self.rbQuayThuan.setChecked(False)
        
         self.btSave.clicked.connect(self.btSave_click)
 
     def btSave_click(self):
-        if self.isLeft == True :
-            server.serverMain.ConfigChieuQuayDC(self.rbstSpinLeft.isChecked())
-        else :
-            server.serverMain.ConfigChieuQuayDC(not self.rbstSpinLeft.isChecked())
+        #cai dat cho tu ben trai tu ben phai se phai nguoc lai 01-thuan 02- nghich
+        for i in range(1,server.numClientLeft+1):
+            nameTu = "Left_"+str(i)
+            if self.rbQuayNghich.isChecked() :
+                server.dataSent2Client[nameTu].dt2Pi2Ar[1] = 0x02
+            else :
+                server.dataSent2Client[nameTu].dt2Pi2Ar[1] = 0x01
+            server.serverMain.sendMes2Client(nameTu,b'\xee\xee'+bytes(server.dataSent2Client[nameTu].dt2Pi2Ar))
+        
+        for i in range(1,server.numClientRight+1):
+            nameTu = "Right_"+str(i)
+            if self.rbQuayNghich.isChecked():
+                server.dataSent2Client[nameTu].dt2Pi2Ar[1] = 1
+            else :
+                server.dataSent2Client[nameTu].dt2Pi2Ar[1] = 2
+
+            server.serverMain.sendMes2Client(nameTu,b'\xee\xee'+bytes(server.dataSent2Client[nameTu].dt2Pi2Ar))
+
         dialog = MSG_Dialog()
         dialog.exec_()
 

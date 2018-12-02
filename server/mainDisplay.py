@@ -14,6 +14,7 @@ from SV_CanhBao import Ui_SV_CanhBao
 from kbNumber import Ui_Dialog 
 from time import strftime
 from formTimKiem import Ui_formTimKiem
+
 import time
 import struct
 import server
@@ -196,8 +197,7 @@ class Ui_SV_mainDisplay(object):
         SV_mainDisplay.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(SV_mainDisplay)
-        QtCore.QMetaObject.connectSlotsByName(SV_mainDisplay)
-        
+        QtCore.QMetaObject.connectSlotsByName(SV_mainDisplay)    
     
     def retranslateUi(self, SV_mainDisplay):
         _translate = QtCore.QCoreApplication.translate
@@ -249,28 +249,31 @@ class Ui_SV_mainDisplay(object):
 
     def showTemp(self):
         try:
+            
             _date = strftime("%H:%M:%S  %A,%d/%m/%Y")
             self.label_2.setText(str(_date))
             minitue = int(strftime("%M"))
+            sec = int(strftime("%S"))
             if minitue % 10 == 0 :
                 if self.saveLog :
                     self.saveLog = False
                     server.saveNhietDoDoAm()
             else :
                 self.saveLog = True
-            #neu dang trong che do bao duong ko lam gi luon
+            if sec % 10 == 0:
+                server.serverMain.sendTempOut()
+            #neu dang trong che do bao duong ko lam gi luon return luon
             if server.caseBD > 0:
                 return
-                
+
             self.lbHumiInValue.setText(str(uart.dataReceved.humiIn))
             self.lbTempInValue.setText(str(uart.dataReceved.tempIn))
-         
             self.lbTempOutValue.setText(str(uart.dataReceved.tempOut))
             self.lbHumiOutValue.setText(str(uart.dataReceved.humiOut))
-
-            tuActive = server.tuOpenedLeft
-            #print("tu actived=", tuActive," waiting=",server.isWaiting)
-            if tuActive[0] == 'L':
+           
+            tuActive = server.tuActive
+            
+            if tuActive[0] == 'L' or tuActive[0] == 'R': #hien thi tu nao dang mo va thong bao nguoi vao ra
                 if server.dataReceivedSer[tuActive].statusMotor == 2:
                     self.lbstatusMotor.setText(tuActive + " Mở")
                 elif server.dataReceivedSer[tuActive].statusMotor == 4:
@@ -286,34 +289,30 @@ class Ui_SV_mainDisplay(object):
                 except:
                     pass
                 self.lbSoNguoi.setText(str(server.dataReceivedSer[tuActive].numPersonIn))
-
-            else:
+            else: #neu ko co tu nao dang mo thi setText bang Dong or Dung
                 self.lbKhoangCach.setText("")
                 self.lbSoNguoi.setText("")
                 self.lbWarning.setText("")
-                self.lbstatusMotor.setText("Đóng")
-                
-            if server.isWaiting == 2: # dung khan cap
-                self.lbstatusMotor.setText("Dừng")
-
-            #Status motor kiem tra man hinh cho 
-            if server.debugg == True :
-                print("statusSuCo = ", server.statusSuCo, " isWaiting = ", server.isWaiting)
+                self.lbstatusMotor.setText("Đóng")    
+                if server.isWaiting == 2: # dung khan cap
+                    self.lbstatusMotor.setText("Dừng")
             
             #check su co xem có sự cố cháy ko nếu có sự cố cháy thì chỉ hiện sự cố cháy thôi rồi return 
             server.serverMain.checkSuCo(False)
-
             if server.statusSuCo == 0 :# khong co su co thi reset form 
                 self.isShowSuCoForm = False
-            if server.arraySuCo[1] != '0' or server.arraySuCo[2] != '0' : # su co co chay
-                
+            if server.arraySuCo[1] != '0' or server.arraySuCo[2] != '0': # su co co chay
                 if self.isShowSuCoForm == False :
                     if server.arraySuCo[1] != '0':
                         #phat hien chay trong tu --> mo tu bi chay
                         self.linkFile = server.folderMP3 + "010.mp3"
                         server.playmp3(self.linkFile)
-                        server.tuTraiPhai = server.arraySuCo[1][0]
-                        server.dongMoTuFunction(3 , server.arraySuCo[1])
+                        if server.arraySuCo[1][0] == 'M' : # mo 2 tu gan master nhat Left_1 Right_1
+                            server.tuTraiPhai = 'A'
+                            server.dongMoTuFunction(4, 'All_1')
+                        elif server.arraySuCo[1][0] == 'L' or server.arraySuCo[1][0] == 'R' :
+                            server.tuTraiPhai = server.arraySuCo[1][0]
+                            server.dongMoTuFunction(3 , server.arraySuCo[1])
                     else:
                         #phat hien chay ngoai tu -> dong tat ca cac tu
                         self.linkFile = server.folderMP3 + "011.mp3"
@@ -326,11 +325,13 @@ class Ui_SV_mainDisplay(object):
 
                 return 
 
+            #dang van hanh ma co vat can thi hien form su co canh bao vat can
             if server.isWaiting == 3 and ( server.arraySuCo[0] != '0' or server.statusSuCo == 4 ):
                 if self.isShowSuCoForm == False :
                     self.isShowSuCoForm = True
                     self.callSuCoForm()
                 return
+            
             #yeu cau dong mo tu va khong co nguoi trong tu
             if server.isWaiting == 0 or server.isWaiting == 2: 
                 self.isShowWaitForm = False
@@ -338,31 +339,22 @@ class Ui_SV_mainDisplay(object):
                 if self.isShowWaitForm == False :
                     self.isShowWaitForm = True
                     self.callWaitingForm()
-
-            #sent to Arduino to status of server
-            if server.isWaiting == 2:
-                uart.DataCamBien[4] = 0x32
-                uart.sentCambien()
-            elif server.isWaiting == 0 or server.isWaiting == 1:
-                uart.DataCamBien[4] = 0x31
-                uart.sentCambien()
-
-            print("check thong gio")
+            
+            '''phan nay kiem tra thong gio timer thuc thi thong gio'''
             #check thong gio co bat hay khong
-            if self.numThongGio >= 1 :
+            if server.numThongGio >= 1 :
                 if server.serverMain.checkAllTuIsClosed() :
                     print("timer call thong gio")
-                    self.numThongGio = -2
+                    server.numThongGio = -2
                     self.btThongGio_click()
                 else :
-                    self.numThongGio += 1
-                    if self.numThongGio == 30: #sau 10s cac tu chua dong huy lenh thong gio nay di
-                        self.numThongGio = 0
-                        self.executeThongGio = 0
-                        self.countThongGio = 60
-                        print("reset thong gio self.numThongGio = 0")
-            #check auto open thong gio
-            if self.executeThongGio == 0 : # thong gio dang khong thuc thi
+                    server.numThongGio += 1
+                    if server.numThongGio == 30: #sau 10s cac tu chua dong huy lenh thong gio nay di
+                        server.numThongGio = 0
+                        server.executeThongGio = 0
+                        server.countThongGio = 60
+                        print("TimOut reset thong gio self.numThongGio = 0")
+            if server.executeThongGio == 0 : # thong gio dang khong thuc thi
                 dateH = int(strftime("%H"))
                 dateM = int(strftime("%M"))
                 timeThongGio = uart.dataAllJsonConfig["timeThongGio"]
@@ -370,12 +362,29 @@ class Ui_SV_mainDisplay(object):
                 if dateH == int(timeSplit[0]) and dateM == int(timeSplit[1]) and timeSplit[3] == '1':# co kich hoat ham autoThongGio
                     print("Mo thong gio tu dong")
                     self.btThongGio_click() # thuc hien chuc nang mo thong gio
-                    self.countThongGio = int(timeSplit[2]) * 60 
-            elif self.executeThongGio == 1 : #che do thong gio dang mo
-                self.countThongGio -= 1 #tang so giay thong gio dang mo len 1
-                if self.countThongGio <= 0 :
+                    server.countThongGio = int(timeSplit[2]) * 60 
+            elif server.executeThongGio == 1 : #che do thong gio dang mo
+                server.countThongGio -= 1 #tang so giay thong gio dang mo len 1
+                if server.countThongGio <= 0 :
                     self.btThongGio_click() # neu het thoi gian thong gio tat che do thong gio
+            if server.numThongGio == -3 :
+                self.btThongGio.setText("Tắt\nThông gió")
+            elif server.numThongGio == 0 :
+                self.btThongGio.setText("Thông gió")
 
+            #Kiem tra den thap sent to Arduino to status of server 
+            if server.isWaiting == 2 or server.isWaiting == 3 or server.isWaiting == 1: #Dung khan cap bao den vang
+                uart.DataCamBien[4] = 0x32
+                uart.sentCambien()
+            elif server.isWaiting == 0: # hoat dong binh thuong bao den xanh
+                uart.DataCamBien[4] = 0x31
+                uart.sentCambien()
+
+            '''phan kiem tra PC --> master bat tat dieu hoa'''
+            if server.statusVanHanh == 0x34 : #DieuKhienDieuHoa
+                self.callDieuHoaForm()
+            elif server.statusVanHanh == 40 : # bat che do bao duong
+                self.callBaoDuongForm()
         except Exception as e:
             print("error in mainDisplay.ShowTemp() " + str(e))
 
@@ -390,9 +399,6 @@ class Ui_SV_mainDisplay(object):
         self.btTroGiup.clicked.connect(self.btTroGiup_click)
         self.btQuanLy.clicked.connect(self.btQuanLy_click)
         self.NumExit = 0
-        self.numThongGio = 0
-        self.executeThongGio = 0
-        self.countThongGio = 60
         self.btClickTimer = False
 
     #de chong doi phim bam
@@ -433,6 +439,7 @@ class Ui_SV_mainDisplay(object):
             server.serverMain.sentLogin2AllClient()
             self.ctimer.stop()
             self.SV_mainDisplay.close()
+    
     def btMoTu_click(self):
         #chong doi phim 
         if(self.btClickTimer):
@@ -470,75 +477,8 @@ class Ui_SV_mainDisplay(object):
             return
         else:
             self.buttonTimer()
+        server.serverMain.thongGioFuction()
         
-        if server.numClientLeft > 0 :
-            byKC = server.dataSent2Client["Left_1"].dt2Pi2Ar[3]
-            disAvgLeft = int( byKC/server.numClientLeft )
-        if server.numClientRight > 0:
-            byKC = server.dataSent2Client["Right_1"].dt2Pi2Ar[3]
-            disAvgRight = int( byKC/server.numClientRight )
-        
-        
-        if self.numThongGio == 0 :
-            self.executeThongGio = 1
-            if server.serverMain.checkAllTuIsClosed() :
-                print("bat che do thong gio")
-                self.linkFile = server.folderMP3 + "019.mp3"
-                server.playmp3(self.linkFile)
-                time.sleep(0.3)
-                for i in range(1,server.numClientLeft+1):
-                    nameTu = "Left_"+str(i)
-                    byteKC = struct.pack('B',disAvgLeft*i)
-                    server.serverMain.sendMes2Client(nameTu,b'\x1d\x1d\x01'+byteKC)
-                for i in range(1,server.numClientRight+1):
-                    nameTu = "Right_"+str(i)
-                    byteKC = struct.pack('B',disAvgRight*i)
-                    server.serverMain.sendMes2Client(nameTu,b'\x1d\x1d\x01'+byteKC)
-
-                self.btThongGio.setText("Tắt\nThông gió")
-                self.numThongGio = -3 #da thuc thi thong gio
-            else :
-                #dong tu truoc khi thong gio
-                self.numThongGio = 1
-                server.tuTraiPhai = 'A'
-                server.dongMoTuFunction(0,1)
-                return 
-        elif self.numThongGio == -2 :
-            print("bat che do thong gio")
-            self.linkFile = server.folderMP3 + "019.mp3"
-            server.playmp3(self.linkFile)    
-            for i in range(1,server.numClientLeft+1):
-                nameTu = "Left_"+str(i)
-                byteKC = struct.pack('B',disAvgLeft*i)
-                server.serverMain.sendMes2Client(nameTu,b'\x1d\x1d\x01'+byteKC)
-            for i in range(1,server.numClientRight+1):
-                nameTu = "Right_"+str(i)
-                byteKC = struct.pack('B',disAvgRight*i)
-                server.serverMain.sendMes2Client(nameTu,b'\x1d\x1d\x01'+byteKC)
-            self.btThongGio.setText("Tắt\nThông gió")
-            self.numThongGio = -3
-
-        elif self.numThongGio == -3 :
-            self.linkFile = server.folderMP3 + "020.mp3"
-            server.playmp3(self.linkFile)
-            for i in range(1,server.numClientLeft+1):
-                nameTu = "Left_"+str(i)
-                byteKC = struct.pack('B',disAvgLeft*i)
-                server.serverMain.sendMes2Client(nameTu,b'\x1d\x1d\x00'+byteKC)
-            for i in range(1,server.numClientRight+1):
-                nameTu = "Right_"+str(i)
-                byteKC = struct.pack('B',disAvgRight*i)
-                server.serverMain.sendMes2Client(nameTu,b'\x1d\x1d\x00'+byteKC)
-
-            time.sleep(1)
-            #sau khi thong gio xong gui lenh dong tu
-            server.tuTraiPhai = 'A'
-            server.dongMoTuFunction(0,1)
-            self.numThongGio = 0
-            self.executeThongGio = 0
-            self.countThongGio = 60
-            self.btThongGio.setText("Thông gió")
- 
     def btTroGiup_click(self):
         #chong doi phim 
         if(self.btClickTimer):
@@ -579,12 +519,20 @@ class Ui_SV_mainDisplay(object):
         self.setWindow()
     
     def callSuCoForm(self):
+        #co su co bao den thap
         uart.DataCamBien[4] = 0x33
         uart.sentCambien()
         self.ui = Ui_SV_CanhBao()
         self.setWindow()
     
-        
+    def callBaoDuongForm(self):
+        from BaoDuongServer import Ui_BaoDuongServer
+        self.ui = Ui_BaoDuongServer()
+        self.setWindow()
+    def callDieuHoaForm(self):
+        from svDieuKhienDieuHoa import Ui_svDieuHoa
+        self.ui = Ui_svDieuHoa()
+        self.setWindow()
 import resources
 """
 if __name__ == "__main__":

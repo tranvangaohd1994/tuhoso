@@ -31,7 +31,7 @@ class Ui_setLucChongKet(object):
         self.frame.setObjectName("frame")
 
         self.label = QtWidgets.QLabel(self.frame)
-        self.label.setGeometry(QtCore.QRect(0, 120, 1281, 61))
+        self.label.setGeometry(QtCore.QRect(0, 110, 1281, 61))
         self.label.setStyleSheet("font: 75 32pt \"Arial\";background-color: rgb(0, 0, 0);color: rgb(255, 255, 255);")
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
@@ -101,6 +101,19 @@ class Ui_setLucChongKet(object):
         self.lbHuongDan.setWordWrap(True)
         self.lbHuongDan.setObjectName("lbHuongDan")
 
+        self.grcdControl = QtWidgets.QGroupBox(self.frame)
+        self.grcdControl.setGeometry(QtCore.QRect(10, 670, 481, 121))
+        self.grcdControl.setStyleSheet(".QRadioButton{font: 75 Bold 26pt \"Ubuntu\";color: white;background-color: #55007f;}.QRadioButton::indicator{width: 20px;height: 20px;}")
+        self.grcdControl.setTitle("")
+        self.grcdControl.setObjectName("grcdControl")
+        self.rbTuPhai = QtWidgets.QRadioButton(self.grcdControl)
+        self.rbTuPhai.setGeometry(QtCore.QRect(260, 10, 181, 100))
+        self.rbTuPhai.setObjectName("rbTuPhai")
+        self.rbTuTrai = QtWidgets.QRadioButton(self.grcdControl)
+        self.rbTuTrai.setGeometry(QtCore.QRect(20, 10, 181, 100))
+        self.rbTuTrai.setChecked(True)
+        self.rbTuTrai.setObjectName("rbTuTrai")
+
         self.retranslateUi(setLucChongKet)
         QtCore.QMetaObject.connectSlotsByName(setLucChongKet)
 
@@ -124,7 +137,8 @@ class Ui_setLucChongKet(object):
             " + 4-7 là cấp độ thường\n"
             " + 8-10 là cấp độ mạnh nhất ứng với tải lớn\n"
             " + 5 là cấp độ cài đặt mặc định"))
-
+        self.rbTuPhai.setText(_translate("setLucChongKet", "Tủ phải"))
+        self.rbTuTrai.setText(_translate("setLucChongKet", "Tủ trái"))
         self.setEvent()
 
     def setEvent(self):
@@ -141,24 +155,40 @@ class Ui_setLucChongKet(object):
         value = dialogKey.exec_()
         if value :
             self.tbChonTu.setText(value)
-
-        if self.tbChonTu.text() == '0':
-            self.tbLCKHienTai.setText(str(int(server.dataSent2Client["Left_1"].dt2Pi2Ar[4])))
+        if self.rbTuTrai.isChecked():
+            firstName = 'Left_'
         else :
-            self.tbLCKHienTai.setText(str(int(server.dataSent2Client["Left_"+self.tbChonTu.text()].dt2Pi2Ar[4])))
+            firstName = 'Right_'
+
+        if self.tbChonTu.text() == '0': #neu bang khong thi luc chong ket cac tu la nhu nhau
+            if firstName[0] == 'L' and server.numClientLeft > 0 :
+                self.tbLCKHienTai.setText(str(int(server.dataSent2Client["Left_1"].dt2Pi2Ar[4])))
+            elif firstName[0] == 'R' and server.numClientRight > 0:
+                self.tbLCKHienTai.setText(str(int(server.dataSent2Client["Right_1"].dt2Pi2Ar[4])))
+            else :
+                self.tbLCKHienTai.setText('0')
+        else :
+            self.tbLCKHienTai.setText(str(int(server.dataSent2Client[firstName+self.tbChonTu.text()].dt2Pi2Ar[4])))
 
     def btExit_click(self):
         self.setLucChongKet.close()
         pass
     def btSave_click(self):
         if len(self.tbLCKCaiDat.text()) > 0:
+            if self.rbTuTrai.isChecked() :
+                firstName = 'Left_'
+                maxTu = server.numClientLeft
+            else :
+                firstName = 'Right_'
+                maxTu = server.numClientRight
+
             if self.tbChonTu.text() == '0':
-                for i in range(1,server.numClientLeft+1):
-                    nameTu = "Left_"+str(i)
+                for i in range(1,maxTu+1):
+                    nameTu = firstName+str(i)
                     server.dataSent2Client[nameTu].dt2Pi2Ar[4] = int(self.tbLCKCaiDat.text())
                     server.serverMain.sendMes2Client(nameTu , b'\xee\xee'+bytes(server.dataSent2Client[nameTu].dt2Pi2Ar))
             else :
-                nameTu = "Left_"+self.tbChonTu.text()
+                nameTu = firstName+self.tbChonTu.text()
                 server.dataSent2Client[nameTu].dt2Pi2Ar[4] = int(self.tbLCKCaiDat.text())
                 server.serverMain.sendMes2Client(nameTu , b'\xee\xee'+bytes(server.dataSent2Client[nameTu].dt2Pi2Ar))
             

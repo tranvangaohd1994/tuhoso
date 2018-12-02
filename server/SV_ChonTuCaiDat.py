@@ -78,10 +78,9 @@ class Ui_SVChonClient(object):
     def btBack_click(self):
         self.SVChonClient.close()
     def btCaiDat_click(self):
-        self.checkTuIsChoose()
         self.window = QtWidgets.QMainWindow()
         self.ui = Ui_setChieuQuayDC()
-        self.ui.setupUi(self.window,self.LeftIsChecked)
+        self.ui.setupUi(self.window)
         self.window.show()
         if server.isFullSceen:
             self.window.showFullScreen()
@@ -102,14 +101,6 @@ class Ui_SVChonClient(object):
         server.tuTraiPhai = 'A' # dong ca 2 ben tu
         server.dongMoTuFunction(0,0)
         self.SVChonClient.close()
-
-    # check box change state
-    def checkTuIsChoose(self):
-        self.LeftIsChecked = True
-        if self.cbTu02.isChecked():
-            self.LeftIsChecked = False
-        if self.cbTu01.isChecked():
-            self.LeftIsChecked = True
 """
 if __name__ == "__main__":
     import sys

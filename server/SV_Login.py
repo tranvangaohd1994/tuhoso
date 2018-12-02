@@ -51,7 +51,7 @@ class Ui_SVLogin(object):
         self.tbInput.setGeometry(QtCore.QRect(430, 330, 421, 71))
         self.tbInput.setObjectName("tbInput")
         self.lbtitle2 = QtWidgets.QLabel(self.frame)
-        self.lbtitle2.setGeometry(QtCore.QRect(160, 260, 381, 61))
+        self.lbtitle2.setGeometry(QtCore.QRect(450, 260, 381, 61))
         self.lbtitle2.setAlignment(QtCore.Qt.AlignCenter)
         self.lbtitle2.setObjectName("lbtitle2")
         self.lbThongBao = QtWidgets.QLabel(self.frame)

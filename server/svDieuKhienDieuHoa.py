@@ -97,6 +97,8 @@ class Ui_svDieuHoa(object):
         self.setEvent()
 
     def setEvent(self):
+        server.statusVanHanh = 0x36 # da bat form dieu hoa
+
         self.tbInput.setText('20')
         self.btHoc = None
         self.btDieuKhien = None
@@ -122,6 +124,31 @@ class Ui_svDieuHoa(object):
         t1 = threading.Thread(target=self.checkReceive)
         t1.start()
 
+        self.ctimer = QTimer(self.frame)
+        self.ctimer.timeout.connect(self.checkTimer)
+        self.ctimer.start(400)
+
+    def checkTimer(self):
+        if server.statusVanHanh == 0x36 :
+            return
+
+        if server.statusVanHanh == 0x35: #thoat form dieu hoa
+            self.btBack_click()
+        elif server.statusVanHanh == 0x30 :
+            self.btBatDieuHoa_click()
+        elif server.statusVanHanh == 0x31 :
+            self.btTatDieuHoa_click()
+        elif server.statusVanHanh == 0x32 :
+            self.btBatQuat_click()
+        elif server.statusVanHanh == 0x33 :
+            self.btTatQuat_click()
+
+        elif server.statusVanHanh >= 16 and server.statusVanHanh <= 31  :
+            self.tbInput.setText(str(server.statusVanHanh))
+            self.btDatNhietDo_click()
+        server.statusVanHanh = 0x36
+
+
     def tbInput_click(self):
         dialogKey= Ui_Dialog(31)
         value = dialogKey.exec_()
@@ -136,7 +163,6 @@ class Ui_svDieuHoa(object):
         self.returnColor()
         self.btHoc = self.btHocLenhBatQuat
         self.sentData(b'\x31\x32\x00\x00\x00\x00\x00\x00')
-        
 
     def btHocLenhDKNhiet_click(self):
         self.returnColor()
@@ -144,7 +170,6 @@ class Ui_svDieuHoa(object):
         dt = struct.pack('B',int(self.tbInput.text()))
         self.sentData(b'\x31' + dt + b'\x00\x00\x00\x00\x00\x00')
         
-
     def btHocLenhOff_click(self):
         self.returnColor()
         self.btHoc = self.btHocLenhOff
@@ -155,13 +180,10 @@ class Ui_svDieuHoa(object):
         self.btHoc = self.btHocLenhOn
         self.sentData(b'\x31\x31\x00\x00\x00\x00\x00\x00')
         
-        
     def btHocLenhTatQuat_click(self):
         self.returnColor()
         self.btHoc = self.btHocLenhTatQuat
         self.sentData(b'\x31\x33\x00\x00\x00\x00\x00\x00')
-        
-
 
     def btBatDieuHoa_click(self):
         self.returnColor()
@@ -175,7 +197,6 @@ class Ui_svDieuHoa(object):
         self.btHoc = None
         self.sentData(b'\x30\x30\x00\x00\x00\x00\x00\x00')
         
-       
     def btDatNhietDo_click(self):
         self.returnColor()
         dt = struct.pack('B',int(self.tbInput.text()))
@@ -183,13 +204,11 @@ class Ui_svDieuHoa(object):
         self.btHoc = None
         self.sentData(b'\x30' + dt + b'\x00\x00\x00\x00\x00\x00')
         
-        
     def btBatQuat_click(self):
         self.returnColor()
         self.btDieuKhien = self.btBatQuat
         self.btHoc = None
         self.sentData(b'\x30\x32\x00\x00\x00\x00\x00\x00')
-        
         
     def btTatQuat_click(self):
         self.returnColor()
@@ -203,6 +222,8 @@ class Ui_svDieuHoa(object):
             #tra lai mau ban dau cho button
 
     def btBack_click(self):
+        self.ctimer.stop()
+        server.statusVanHanh = 0
         self.isRunThread = False
         if self.serOK:
             self.ser.close()
@@ -246,21 +267,25 @@ class Ui_svDieuHoa(object):
         if self.serOK == False:
             return
         while self.isRunThread :
-            dt = self.ser.read(3)
-            if len(dt) == 3 :
-                #ERR ff5f2e
-                if dt[0] == 0x45 and dt[1] == 0x52 and dt[2] == 0x52 :
-                    #self.tbInput.setStyleSheet("background-color: #ff5f2e")
-                    self.buttonClicked.setStyleSheet("background-color: #ff5f2e")
-                elif dt[0] == 0x41 and dt[1] == 0x43 and dt[2] == 0x4b:
-                    if self.btDieuKhien != None :
-                        self.btDieuKhien.setStyleSheet("background-color: #ff0000")
-                    if self.btHoc != None :
-                        self.btHoc.setStyleSheet("background-color: #ff0000")
-                    
-                    #self.tbInput.setStyleSheet("background-color: #81D4FA")
-                else:
-                    print("dataReceive not ACK or ERR : ",dt)
+            try :
+                dt = self.ser.read(3)
+                if len(dt) == 3 :
+                    #ERR ff5f2e
+                    if dt[0] == 0x45 and dt[1] == 0x52 and dt[2] == 0x52 :
+                        #self.tbInput.setStyleSheet("background-color: #ff5f2e")
+                        self.buttonClicked.setStyleSheet("background-color: #ff5f2e")
+                    elif dt[0] == 0x41 and dt[1] == 0x43 and dt[2] == 0x4b:
+                        if self.btDieuKhien != None :
+                            self.btDieuKhien.setStyleSheet("background-color: #ff0000")
+                        if self.btHoc != None :
+                            self.btHoc.setStyleSheet("background-color: #ff0000")
+                        
+                        #self.tbInput.setStyleSheet("background-color: #81D4FA")
+                    else:
+                        print("dataReceive not ACK or ERR : ",dt)
+            except Exception as e:
+                print('Exception in svDieuKhienDieuHoa function CheckRececie: ')
+                break
         print("Thread recived dieu khien dieu hoa close : ")
 
 import resources

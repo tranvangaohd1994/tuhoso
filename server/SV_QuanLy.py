@@ -9,9 +9,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from keyboard import Ui_Keyboard
-
-from SV_ChonTuCaiDatV2 import Ui_SVChonClientV2
 from svCaiDatPhuTro import Ui_SVCaiDatPhuTro
+from SV_CaiDatNangCao import Ui_SVCaiDatNangCao
 import uart
 
 class Ui_SVQuanLy(object):
@@ -73,7 +72,7 @@ class Ui_SVQuanLy(object):
         else :
             self.lbThongBao.setText("")
             self.window = QtWidgets.QMainWindow()
-            self.ui = Ui_SVChonClientV2()
+            self.ui = Ui_SVCaiDatNangCao()
             self.ui.setupUi(self.window)
             self.window.show()
             self.window.showFullScreen()

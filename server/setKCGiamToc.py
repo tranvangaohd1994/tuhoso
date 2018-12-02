@@ -83,6 +83,20 @@ class Ui_setKCGiamToc(object):
         self.label_5.setAlignment(QtCore.Qt.AlignCenter)
         self.label_5.setObjectName("label_5")
 
+        self.grcdControl = QtWidgets.QGroupBox(self.frame)
+        self.grcdControl.setGeometry(QtCore.QRect(30, 640, 481, 121))
+        self.grcdControl.setStyleSheet(".QRadioButton{font: 75 Bold 26pt \"Ubuntu\";color: white;background-color: #55007f;}.QRadioButton::indicator{width: 20px;height: 20px;}\n"
+"")
+        self.grcdControl.setTitle("")
+        self.grcdControl.setObjectName("grcdControl")
+        self.rbTuPhai = QtWidgets.QRadioButton(self.grcdControl)
+        self.rbTuPhai.setGeometry(QtCore.QRect(260, 10, 181, 100))
+        self.rbTuPhai.setObjectName("rbTuPhai")
+        self.rbTuTrai = QtWidgets.QRadioButton(self.grcdControl)
+        self.rbTuTrai.setGeometry(QtCore.QRect(20, 10, 181, 100))
+        self.rbTuTrai.setChecked(True)
+        self.rbTuTrai.setObjectName("rbTuTrai")
+
         self.retranslateUi(setKCGiamToc)
         QtCore.QMetaObject.connectSlotsByName(setKCGiamToc)
         self.btExit.clicked.connect(setKCGiamToc.close)
@@ -97,12 +111,18 @@ class Ui_setKCGiamToc(object):
         self.btSave.setText(_translate("setKCGiamToc", "Lưu"))
         self.btExit.setText(_translate("setKCGiamToc", "Thoát"))
         self.label_5.setText(_translate("setKCGiamToc", "Hướng dẫn"))
-        
+        self.rbTuPhai.setText(_translate("setKCGiamToc", "Tủ phải"))
+        self.rbTuTrai.setText(_translate("setKCGiamToc", "Tủ trái"))
         self.setEvent()
 
     def setEvent(self):
-        
-        self.tbKCHienTai.setText(str(int(server.dataSent2Client["Left_1"].dt2Pi2Ar[7])))
+        if self.rbTuTrai.isChecked() and server.numClientLeft > 0:
+            self.tbKCHienTai.setText(str(int(server.dataSent2Client["Left_1"].dt2Pi2Ar[7])))
+        elif self.rbTuPhai.isChecked() and server.numClientRight > 0:
+            self.tbKCHienTai.setText(str(int(server.dataSent2Client["Right_1"].dt2Pi2Ar[7])))
+        else:
+            self.tbKCHienTai.setText('0')
+
         self.tbKCCaiDat.clicked.connect(self.tbKCCaiDat_click)
         self.btSave.clicked.connect(self.btSave_click)
     def tbKCCaiDat_click(self):
@@ -111,17 +131,21 @@ class Ui_setKCGiamToc(object):
         if value :
             self.tbKCCaiDat.setText(value)
     def btSave_click(self):
-        for i in range(1,server.numClientLeft+1):
-            nameTu = "Left_"+str(i)
+
+        if self.rbTuTrai.isChecked():
+            firstName = 'Left_'
+            maxTu = server.numClientLeft
+        else:
+            firstName = 'Right_'
+            maxTu = server.numClientRight
+
+        for i in range(1,maxTu+1):
+            nameTu = firstName + str(i)
             server.dataSent2Client[nameTu].dt2Pi2Ar[7] = int(self.tbKCCaiDat.text())
-            
-            server.serverMain.sendMes2Client(nameTu , b'\xee\xee'+bytes(server.dataSent2Client[nameTu].dt2Pi2Ar))
+            server.serverMain.sendMes2Client(nameTu , b'\xee\xee' + bytes(server.dataSent2Client[nameTu].dt2Pi2Ar))
         
         dialog = MSG_Dialog()
         dialog.exec_()
-
-
-
 
 import resources
 """

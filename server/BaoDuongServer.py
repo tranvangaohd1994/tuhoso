@@ -88,6 +88,8 @@ class Ui_BaoDuongServer(object):
         self.setEvent()
 
     def setEvent(self):
+        server.statusVanHanh = 41 # da bat form bao duong
+
         linkFile = server.folderMP3 + "017.mp3"
         server.playmp3(linkFile)
         print("close tu left start")
@@ -158,10 +160,13 @@ class Ui_BaoDuongServer(object):
                 linkFile = server.folderMP3 + "049.mp3"
                 server.playmp3(linkFile)
                 server.checkBDok = False
-       
         except Exception as e:
             print("ERROR in BaoDuong checkTimer", str(e))
             self.btExit_click()
+
+        if server.statusVanHanh == 42 : # ket thuc frm bao duong
+            self.btExit_click()
+            print("Ket thuc qua trinh bao duong PC sent to client")
 
     def btTiepTuc_click(self):
         #khi kiem tra xong het 1 tu
@@ -285,6 +290,8 @@ class Ui_BaoDuongServer(object):
         time.sleep(0.5)
         uart.sentDataRandom(b'\xbd\xbd',b'\xff\x00\x00\x00\x00\x00\x00\x00')
         uart.caseBDIsACK = 0
+
+        server.statusVanHanh = 0
         self.BaoDuongServer.close()
         
 

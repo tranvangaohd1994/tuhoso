@@ -162,7 +162,7 @@ def saveConfig():
     dataAllJsonConfig["data7"] = int(DataPi2Ar[7])
     dataAllJsonConfig["dtMK"] = dtMK
     dataAllJsonConfig["dtMKHard"] = dtMKHard
-#/home/pi/Desktop/server/
+    #/home/pi/Desktop/server/
     with open('/home/pi/Desktop/server/config.json', 'w') as outfile:
         json.dump(dataAllJsonConfig, outfile) 
 

@@ -51,12 +51,14 @@ suCo_logger.error('--------------Phien Hoat Dong Moi--------------------')
 # Third file logger
 temp_logger = setup_logger('temp_log', '/home/pi/Desktop/temp.log')
 
+numThongGio, executeThongGio, countThongGio = 0,0,60 # tham so cho thong gio
 #giao dien
 isFullScreen = False
 isFullSceen = False
 # bien kiem tra xem tu nao dang duoc mo
 tuOpenedRight = "0" 
 tuOpenedLeft = "0"
+tuActive = '0'
 tuTraiPhai = 'A' #chon tu nao de thuc hien dong mo tu, A-all ca 2 ben, L-left, R-right
 haveSucoClient = False
 
@@ -72,11 +74,12 @@ userLogin = False
 isListenCL=True
 isWaiting = 0
 isExitApp = False
-debugg = True
+debugg = False
 #caseBaoDuong
 caseBD = 0
 checkBDok = False
 
+statusVanHanh = 0 # 0-mainDisplay 1-waitingForm 2-svDieuKhienDieuHoa 3-BaoDuongServer
 statusSuCo = 0
 #mang de kiem tra xem su co thuoc loai nao 0-co nguoi trong tu 1-chay trong 2-chay ngoai 3-gia sach nho co vat can
 arraySuCo = ['0','0','0','0'] 
@@ -97,6 +100,7 @@ class DongMoTu :
         self.stopped = False
         self.timeSleepp = 0.05
         self.timeMiliSecond = 0.01
+        self.timeDelayTu = 0.5
 
     def checkSuCo(self,ishuman):
         "ham kiem tra co su co hay khong truoc khi van hanh va kiem tra theo timer"
@@ -106,7 +110,18 @@ class DongMoTu :
         statusSuCo = 0
         for i in range(4):
             arraySuCo[i] = '0'
-            
+
+        if uart.dataReceved.fireSenIn == 1 :
+            arraySuCo[1] = 'Master'
+            statusSuCo = 2 #== la bao chay trong
+            msg = "Master có cháy trong"
+            suCo_logger.error(msg)
+        if uart.dataReceved.fireSenOut == 1 :
+            arraySuCo[2] = 'Master'
+            statusSuCo = 3
+            msg = "Master có cháy ngoai"
+            suCo_logger.error(msg)
+
         for dt in dataReceivedSer:
             if tuTraiPhai == 'A' or  tuTraiPhai == dt[0] : #chi check tu ben trai hoac ben phai
                 if dataReceivedSer[dt].fireSenOut == 1 :
@@ -131,9 +146,11 @@ class DongMoTu :
                     arraySuCo[3] = dt 
                     msg = str(dt) + " giá sách nhô có vật cản"
                     suCo_logger.error(msg)
-
+        
+        
 
         if statusSuCo != 0 or (statusSuCo == 0 and isWaiting == 0): # isWaiting == 0 tuc la ko trong qua trinh van hanh
+            
             byteSuCo = struct.pack('bb',statusSuCo,isWaiting)
             for sock in allConnection:
                 allConnection[sock].send(b'\xcb\xcb'+byteSuCo)#sent waiting
@@ -142,7 +159,7 @@ class DongMoTu :
     
     def DoneSuCo(self,isPut):
         "kiem tra khong con su co nao nua"
-        global statusSuCo,isWaiting
+        global statusSuCo,isWaiting, arraySuCo
         print("done su co")
         threadLock.acquire()
         statusSuCo = 0
@@ -158,6 +175,11 @@ class DongMoTu :
                 else :
                     allConnection[sock].send(b'\xcd\xcd')#
                     print(sock, "no reset")
+        if isPut and (uart.dataReceved.fireSenIn == 1 or uart.dataReceved.fireSenOut == 1 ) :
+            dataUartCamBien = bytearray([0x00, 0x00, 0x00, 0x32, 0x00, 0x00, 0x00, 0x00])
+            uart.sentDataRandom(b'\xdd\xdd',bytes(dataUartCamBien))
+            uart.dataReceved.fireSenIn = 0
+            uart.dataReceved.fireSenOut = 0
         #cho cho den khi nao update xong
         for dt in dataReceivedSer:
             dataReceivedSer[dt].fireSenOut = 0
@@ -194,6 +216,7 @@ class DongMoTu :
         global isFlag2906
         for dt in dataReceivedSer:
             if dataReceivedSer[dt].statusMotor != 6 :
+                #print('tu chua nhan 06 ', dt )
                 return True
         #khi nay cac client da cap nhat het trang thai 0x06 chuan bi di chuyen
         isFlag2906 = True
@@ -247,25 +270,6 @@ class DongMoTu :
                 allConnection[sock].send(b'NG')
 
         threadLock.release()
-
-    def ConfigChieuQuayDC(self,spinLeftIsChecked):
-       
-        for i in range(1,numClientLeft+1):
-            nameTu = "Left_"+str(i)
-            if spinLeftIsChecked == True:
-                dataSent2Client[nameTu].dt2Pi2Ar[1] = 0x02
-            else :
-                dataSent2Client[nameTu].dt2Pi2Ar[1] = 0x01
-            self.sendMes2Client(nameTu,b'\xee\xee'+bytes(dataSent2Client[nameTu].dt2Pi2Ar))
-        
-        for i in range(1,numClientRight+1):
-            nameTu = "Right_"+str(i)
-            if spinLeftIsChecked == True:
-                dataSent2Client[nameTu].dt2Pi2Ar[1] = 2
-            else :
-                dataSent2Client[nameTu].dt2Pi2Ar[1] = 1
-
-            self.sendMes2Client(nameTu,b'\xee\xee'+bytes(dataSent2Client[nameTu].dt2Pi2Ar))
        
     def checkQuaDong(self):
         for dt in dataReceivedSer:
@@ -291,7 +295,85 @@ class DongMoTu :
                 self.sendMes2Client(sock,dbyte)
         else :
             print("Error in sendDate2Client ")
-      
+    
+    def thongGioFuction(self):
+        global dataSent2Client, numClientLeft, numClientRight, folderMP3,tuTraiPhai,numThongGio, executeThongGio, countThongGio
+
+        if numClientLeft > 0 :
+            byKC = dataSent2Client["Left_1"].dt2Pi2Ar[3]
+            disAvgLeft = int( byKC/numClientLeft )
+        if numClientRight > 0:
+            byKC = dataSent2Client["Right_1"].dt2Pi2Ar[3]
+            disAvgRight = int( byKC/numClientRight )
+        
+        if numThongGio == 0 :
+            executeThongGio = 1
+
+            if self.checkAllTuIsClosed() : #neu cac tu da dong bat che do thong gio luon
+                print("bat che do thong gio")
+                linkFile = folderMP3 + "019.mp3"
+                playmp3(linkFile)
+                time.sleep(0.3)
+                for i in range(1,numClientLeft+1):
+                    nameTu = "Left_"+str(i)
+                    byteKC = struct.pack('B',disAvgLeft*i)
+                    self.sendMes2Client(nameTu,b'\x1d\x1d\x01'+byteKC)
+                for i in range(1,numClientRight+1):
+                    nameTu = "Right_"+str(i)
+                    byteKC = struct.pack('B',disAvgRight*i)
+                    self.sendMes2Client(nameTu,b'\x1d\x1d\x01'+byteKC)
+
+                #self.btThongGio.setText("Tắt\nThông gió")
+                numThongGio = -3 #da thuc thi thong gio
+            else : #neu chua dong tu phai dong tu truoc roi moi bat thong gio
+                numThongGio = 1
+                tuTraiPhai = 'A'
+                dongMoTuFunction(0,1)
+                return 
+        
+        elif numThongGio == -2 : #bat che do thong gio
+            print("bat che do thong gio")
+            linkFile = folderMP3 + "019.mp3"
+            playmp3(linkFile)    
+            for i in range(1,numClientLeft+1):
+                nameTu = "Left_"+str(i)
+                byteKC = struct.pack('B',disAvgLeft*i)
+                self.sendMes2Client(nameTu,b'\x1d\x1d\x01'+byteKC)
+            for i in range(1,numClientRight+1):
+                nameTu = "Right_"+str(i)
+                byteKC = struct.pack('B',disAvgRight*i)
+                self.sendMes2Client(nameTu,b'\x1d\x1d\x01'+byteKC)
+            numThongGio = -3
+
+        elif numThongGio == -3 : #tat de do thong gio
+            linkFile = folderMP3 + "020.mp3"
+            playmp3(linkFile)
+            for i in range(1,numClientLeft+1):
+                nameTu = "Left_"+str(i)
+                byteKC = struct.pack('B',disAvgLeft*i)
+                self.sendMes2Client(nameTu,b'\x1d\x1d\x00'+byteKC)
+            for i in range(1,numClientRight+1):
+                nameTu = "Right_"+str(i)
+                byteKC = struct.pack('B',disAvgRight*i)
+                self.sendMes2Client(nameTu,b'\x1d\x1d\x00'+byteKC)
+
+            time.sleep(1)
+            #sau khi thong gio xong gui lenh dong tu
+            tuTraiPhai = 'A'
+            dongMoTuFunction(0,1)
+            numThongGio = 0
+            executeThongGio = 0
+            countThongGio = 60
+
+    def sendTempOut(self):
+        threadLock.acquire()
+        temp = int(uart.dataReceved.tempOut * 10)
+        humi = int(uart.dataReceved.humiOut * 10)
+        daHT = struct.pack('H',temp) + struct.pack('H',humi)
+        if len(daHT) == 4:
+            for sock in allConnection:
+                allConnection[sock].send(b'\xda\xda' + daHT)
+        threadLock.release()
 #tao ra 1 thread client khi co 1 client ket noi den server
 class ListenClientThread(threading.Thread,DongMoTu):
     def __init__(self,idThreadIP,connection,soTu):
@@ -328,9 +410,12 @@ class ListenClientThread(threading.Thread,DongMoTu):
                             if data[29] == 0x05 and isFlag2906 and isWaiting != 1:
                                 "trong trang thai binh thuong khong van hanh neu co isFlag2906 = true ma data[29] =0x05 thi co su co "
                                 haveSucoClient = True
-                                print("haveSuCoClient = True ", self.tu)
+                                #print("haveSuCoClient = True ", self.tu)
                             elif data[29] == 0x02:
-                                tuOpenedLeft = self.tu
+                                if self.tu[0] == 'L' :
+                                    tuOpenedLeft = self.tu
+                                elif self.tu[0] == 'R':
+                                    tuOpenedRight = self.tu
 
                     #receive data setting from Client sent to server
                     elif len(data) == 2 and data[0] ==0xbb and data[1] == 0xbb :
@@ -444,7 +529,7 @@ class OpenTuThread(threading.Thread,DongMoTu):
         self.numTu = numTu #ex:: Left_1 Right_2
         self.daemon = True
     def CheckError(self):
-        global isWaiting,  haveSucoClient , isGetDataFromClient, isFlag2906,statusSuCo,tuOpenedLeft
+        global isWaiting,  haveSucoClient , isGetDataFromClient, isFlag2906,statusSuCo,tuOpenedLeft,tuOpenedRight
         print("Start OpenTuThread")
         self.checkSuCo(True)
         threadLock.acquire()
@@ -489,7 +574,7 @@ class OpenTuThread(threading.Thread,DongMoTu):
         return True
 
     def run(self):
-        global isWaiting
+        global isWaiting,tuActive
         if self.CheckError() == False :
             return
         #send open tu
@@ -502,6 +587,7 @@ class OpenTuThread(threading.Thread,DongMoTu):
             self.sentWaiting2AllClient() 
         threadLock.release()
         ss = "Tủ " + str(self.numberTu) + " Mở"
+        tuActive = self.numTu
         loggerInfor.info(ss)
         
     def openTuLeft(self):
@@ -512,8 +598,12 @@ class OpenTuThread(threading.Thread,DongMoTu):
         #check tu nao dang mo
         if (firstName[0]=='L' and tuOpenedLeft != "0") or (firstName[0]=='R' and tuOpenedRight != "0") :
             "co tu dang mo"
-            numberTuOpened = int(tuOpenedLeft.split('_')[1])
-            print("Tu open la ", tuOpenedLeft )
+            if firstName[0]=='L' :
+                numberTuOpened = int(tuOpenedLeft.split('_')[1])
+            else:
+                numberTuOpened = int(tuOpenedRight.split('_')[1])
+
+            print("Tu open la ", numberTuOpened )
             if self.numberTu < numberTuOpened :
                 "tu muon mo co nho hon tu dang mo ko?? neu co thi mo"
                 tuDau = numberTuOpened - 1
@@ -526,7 +616,7 @@ class OpenTuThread(threading.Thread,DongMoTu):
                     tuK-=1
                     if isWaiting == 2 :
                         return False
-                    time.sleep(self.timeMiliSecond)
+                    time.sleep(self.timeDelayTu)
 
                 #cho cac tuDau mo xong thi  
                 while tuDau >= self.numberTu:
@@ -555,7 +645,7 @@ class OpenTuThread(threading.Thread,DongMoTu):
                     tuK+=1
                     if isWaiting == 2 : 
                         return False
-                    time.sleep(self.timeMiliSecond)
+                    time.sleep(self.timeDelayTu)
 
                 #cho cac tu dong
                 while tuDau < self.numberTu:
@@ -585,7 +675,7 @@ class OpenTuThread(threading.Thread,DongMoTu):
                 tuK-=1
                 if isWaiting == 2 : 
                     return False
-                time.sleep(self.timeMiliSecond)
+                time.sleep(self.timeDelayTu)
 
             #cho cac tuDau mo xong thi  
             while tuDau >= self.numberTu:
@@ -630,7 +720,7 @@ class MoTuTongQuat(threading.Thread,DongMoTu):
         return True
 
     def run(self):
-        global isWaiting,  haveSucoClient , isGetDataFromClient, isFlag2906,statusSuCo
+        global isWaiting,  haveSucoClient , isGetDataFromClient, isFlag2906,statusSuCo,tuActive
         if self.isCheckedError :
             if self.checkError() == False : 
                 return
@@ -659,11 +749,14 @@ class MoTuTongQuat(threading.Thread,DongMoTu):
             isWaiting = 0
             self.sentWaiting2AllClient() 
         threadLock.release()
-
+        tuActive = self.numTu
         ss = "Tủ " + str(self.numberTu) + " Mở"
         loggerInfor.info(ss)
         print("ss")
-        
+    def sendDongMo(self,nameTu,dm):
+        dataSent2Client[nameTu].dt2Pi2Ar[5] = 0x00 # khong kiem tra cam bien
+        dataSent2Client[nameTu].dt2Pi2Ar[2] = dm #dong cac tu nho hon tu can mo
+        self.sendMes2Client(nameTu,b'\xbb\xbb' + bytes(dataSent2Client[nameTu].dt2Pi2Ar))
     def openTuLeft(self):
         "mo cac tu ben trai - mo tu numberTu "
         global isWaiting,tuTraiPhai
@@ -689,22 +782,19 @@ class MoTuTongQuat(threading.Thread,DongMoTu):
             if tuKClose < self.numberTu :
                 flagLoop = True
                 nameTu = firstName + str(tuKClose)
-                dataSent2Client[nameTu].dt2Pi2Ar[5] = 0x00 # khong kiem tra cam bien
-                dataSent2Client[nameTu].dt2Pi2Ar[2] = 0x02 #dong cac tu nho hon tu can mo
-                self.sendMes2Client(nameTu,b'\xbb\xbb' + bytes(dataSent2Client[nameTu].dt2Pi2Ar))
+                self.sendDongMo(nameTu,0x02)
                 tuKClose +=1
                 
 
             if tuKOpen >= self.numberTu :
                 flagLoop = True
                 nameTu = firstName + str(tuKOpen)
-                dataSent2Client[nameTu].dt2Pi2Ar[5] = 0x00 # khong kiem tra cam bien
-                dataSent2Client[nameTu].dt2Pi2Ar[2] = 0x01 # mo cac tu lon hon tu can mo
-                self.sendMes2Client(nameTu,b'\xbb\xbb' + bytes(dataSent2Client[nameTu].dt2Pi2Ar))
+                self.sendDongMo(nameTu,0x01)
                 tuKOpen -=1
             if isWaiting == 2 and self.isCheckedError :
                 return False
-            time.sleep(self.timeMiliSecond)
+            time.sleep(self.timeDelayTu)
+        
         #cho cac tuDau dong mo xong thi gui lenh tiep
         flagLoop = True
         flagDoneClose = False
@@ -737,6 +827,118 @@ class MoTuTongQuat(threading.Thread,DongMoTu):
             time.sleep(self.timeMiliSecond)
         return True
 
+class MoCaHaiPhiaTongQuat(threading.Thread,DongMoTu):
+    def __init__(self,numTu,isCheckingError):
+        DongMoTu.__init__(self)
+        threading.Thread.__init__(self)
+        self.daemon = True
+        self.numTu = numTu
+        self.isCheckedError = isCheckingError
+        
+    def checkError(self):
+        global isWaiting,  haveSucoClient , isGetDataFromClient, isFlag2906,statusSuCo
+        print("---OPEN START---bat dau thuc hien luong mo tu tong quat")
+        self.checkSuCo(True)
+        threadLock.acquire()
+        isWaiting = 3 #set co su co co nguoi trong tu va yeu cau dong mo tu
+        threadLock.release()
+        if statusSuCo == 1 :# co nguoi trong tu
+            linkFile = folderMP3 + "008.mp3"
+            playmp3(linkFile)
+            return False
+        elif statusSuCo == 4 :# co nguoi trong tu
+            linkFile = folderMP3 + "015.mp3"
+            playmp3(linkFile)
+            return False
+
+        linkFile = folderMP3 + "004.mp3"
+        playmp3(linkFile)
+        
+        return True
+
+    def run(self):
+        global isWaiting,  haveSucoClient , isGetDataFromClient, isFlag2906,statusSuCo,tuActive
+        if self.isCheckedError :
+            if self.checkError() == False : 
+                return
+        threadLock.acquire()
+        #send wating form
+        isWaiting = 1
+        isFlag2906 = False
+        isGetDataFromClient = False
+        haveSucoClient = False
+        self.sentWaiting2AllClient()
+        #cho cho den khi nhan duoc trang thai cua tat ca cac client la ok se sap dong  mo
+        isGetDataFromClient =True
+        threadLock.release()
+        print("start waiting")
+        while self.waitingData_29_06() :
+            if self.stopped :
+                return
+        time.sleep(self.timeSleepp)
+
+        #send open tu
+        if self.openTuLeft() == False :
+            return 
+        
+        threadLock.acquire()
+        if isWaiting == 1:# thoat do mo thanh cong ko co dung khan cap
+            isWaiting = 0
+            self.sentWaiting2AllClient() 
+        threadLock.release()
+        ss = "Tủ " + str(self.numberTu) + " Mở"
+        loggerInfor.info(ss)
+        print("ss")
+  
+    def sendDongMo(self,nameTu,dm):
+        dataSent2Client[nameTu].dt2Pi2Ar[5] = 0x00 # khong kiem tra cam bien
+        dataSent2Client[nameTu].dt2Pi2Ar[2] = dm #dong cac tu nho hon tu can mo
+        self.sendMes2Client(nameTu,b'\xbb\xbb' + bytes(dataSent2Client[nameTu].dt2Pi2Ar))
+    def openTuLeft(self):
+        "mo cac tu ben trai - mo tu numberTu "
+        global isWaiting
+        #check tu nao dang mo
+        self.numberTu = int(self.numTu.split('_')[1])
+        tuDauClose_Left , tuDauClose_Right = 1 , 1 
+        tuNowClose_Left , tuNowClose_Right = 1 , 1
+        tuDauOpen_Left , tuDauOpen_Right = numClientLeft, numClientRight
+        tuNowOpen_Left , tuNowOpen_Right = numClientLeft , numClientRight
+        firstName_Left , firstName_Right = 'Left_' , 'Right_'
+        flagLoop = True
+        #gui du lieu den cac tu 
+        while flagLoop:
+            flagLoop = False
+            #Dong cac tu nho hon tu can mo
+            if tuNowClose_Left < self.numberTu and self.numberTu <= numClientLeft:
+                flagLoop = True
+                nameTu = firstName_Left + str(tuNowClose_Left)
+                self.sendDongMo(nameTu,0x02)
+                tuNowClose_Left +=1
+            if tuNowClose_Right < self.numberTu and self.numberTu <= numClientRight :
+                flagLoop = True
+                nameTu = firstName_Right + str(tuNowClose_Right)
+                self.sendDongMo(nameTu,0x02)
+                tuNowClose_Right +=1
+
+            if tuNowOpen_Left >= self.numberTu and self.numberTu <= numClientLeft :
+                flagLoop = True
+                nameTu = firstName_Left + str(tuNowOpen_Left)
+                self.sendDongMo(nameTu,0x01)
+                tuNowOpen_Left -=1
+            if tuNowOpen_Right >= self.numberTu and self.numberTu <= numClientRight :
+                flagLoop = True
+                nameTu = firstName_Right + str(tuNowOpen_Right)
+                self.sendDongMo(nameTu,0x01)
+                tuNowOpen_Right -=1
+                
+            if isWaiting == 2 and self.isCheckedError :
+                return False
+            time.sleep(self.timeDelayTu)
+        
+        #gui xong la xong khong cho gi nua
+
+        return True
+
 #thread dung de dong tu version 2
 class CloseTuThreadVer2(threading.Thread,DongMoTu):
     def __init__(self, isCheckError):
@@ -747,7 +949,7 @@ class CloseTuThreadVer2(threading.Thread,DongMoTu):
         self.isCheckedError = isCheckError
         
     def CheckError(self):
-        global isWaiting,haveSucoClient,tuOpenedLeft, isGetDataFromClient, isFlag2906,statusSuCo
+        global isWaiting,haveSucoClient, isGetDataFromClient, isFlag2906,statusSuCo
         print("Start Dong TU")
         self.checkSuCo(True)
         threadLock.acquire()
@@ -773,7 +975,7 @@ class CloseTuThreadVer2(threading.Thread,DongMoTu):
         tuKRight = 1
         tuDauRight = 1
         flagDongTu = True
-        print("close tu start")
+        print("close tu start--", tuTraiPhai)
         #gui lenh dong khong kiem tra cam bien cho cac tu chua dong
         #gui lenh dong tu ben trai 
         while tuKLeft <= numClientLeft and (tuTraiPhai == 'A' or tuTraiPhai =='L') :  
@@ -791,7 +993,7 @@ class CloseTuThreadVer2(threading.Thread,DongMoTu):
             tuKLeft+=1
             if isWaiting == 2 and self.isCheckedError : #neu waiting==2(dung khan cap) trong truong hop co kiem tra su co
                 return False
-            time.sleep(self.timeMiliSecond)
+            time.sleep(self.timeDelayTu)
         #gui lenh dong tu ben phai 
         flagDongTu= True
         while tuKRight <= numClientRight and (tuTraiPhai == 'A' or tuTraiPhai =='R') :  
@@ -809,10 +1011,11 @@ class CloseTuThreadVer2(threading.Thread,DongMoTu):
             tuKRight+=1
             if isWaiting == 2 and self.isCheckedError : #neu waiting==2(dung khan cap) trong truong hop co kiem tra su co
                 return False
-            time.sleep(self.timeMiliSecond)
+            time.sleep(self.timeDelayTu)
 
         #waiting cac tu dong xong
-        while tuDauLeft <= numClientLeft or tuDauRight <= numClientRight:
+        while ((tuDauLeft <= numClientLeft and (tuTraiPhai == 'A' or tuTraiPhai =='L'))  
+                or (tuDauRight <= numClientRight and (tuTraiPhai == 'A' or tuTraiPhai =='R') )):
             nameTuLeft = "Left_" + str(tuDauLeft)
             nameTuRight = "Right_" + str(tuDauRight)
             while True :
@@ -828,7 +1031,9 @@ class CloseTuThreadVer2(threading.Thread,DongMoTu):
         return True
 
     def run(self) : 
-        global isWaiting,haveSucoClient,tuOpenedLeft, isGetDataFromClient, isFlag2906,statusSuCo, tuTraiPhai
+        global isWaiting,haveSucoClient,tuOpenedLeft, tuOpenedRight, isGetDataFromClient, isFlag2906,statusSuCo, tuTraiPhai
+        tuOpenedLeft = "0"
+        tuOpenedRight = '0'
         if self.isCheckedError : # neu co kiem tra dieu kien
             if self.CheckError() == False : #neu dieu kien khong thoa man
                 return 
@@ -837,7 +1042,6 @@ class CloseTuThreadVer2(threading.Thread,DongMoTu):
             #send wating form
             isFlag2906 = False
             isWaiting = 1
-            tuOpenedLeft = "0"
             self.sentWaiting2AllClient()
             #cho cho den khi nhan duoc trang thai cua tat ca cac client la ok se sap dong  mo
             isGetDataFromClient = True
@@ -864,8 +1068,10 @@ class CloseTuThreadVer2(threading.Thread,DongMoTu):
         loggerInfor.info(ss)
 
 
+
 def dongMoTuFunction(inCase,numTu) :
-    global threadDongMoTu
+    global threadDongMoTu,tuActive
+    tuActive = '0'
     if threadDongMoTu != None:
         threadDongMoTu.stopped = True
         threadDongMoTu.join()
@@ -882,10 +1088,13 @@ def dongMoTuFunction(inCase,numTu) :
             threadDongMoTu = OpenTuThread(numTu)
             threadDongMoTu.start()
         elif inCase == 2:
-            threadDongMoTu = MoTuTongQuat(numTu,True)
+            threadDongMoTu = MoTuTongQuat(numTu,True)#co kiem tra cam bien
             threadDongMoTu.start()
         elif inCase == 3:
-            threadDongMoTu = MoTuTongQuat(numTu,False)
+            threadDongMoTu = MoTuTongQuat(numTu,False)#khong kiem tra cam bien
+            threadDongMoTu.start()
+        elif inCase == 4 :
+            threadDongMoTu = MoCaHaiPhiaTongQuat(numTu,False)#khong kiem tra cam bien
             threadDongMoTu.start()
 
 def saveNhietDoDoAm():

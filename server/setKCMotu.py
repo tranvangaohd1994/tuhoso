@@ -76,7 +76,19 @@ class Ui_setKCMoTu(object):
         self.label_5.setStyleSheet("")
         self.label_5.setAlignment(QtCore.Qt.AlignCenter)
         self.label_5.setObjectName("label_5")
-
+        self.grcdControl = QtWidgets.QGroupBox(self.frame)
+        self.grcdControl.setGeometry(QtCore.QRect(40, 640, 481, 121))
+        self.grcdControl.setStyleSheet(".QRadioButton{font: 75 Bold 26pt \"Ubuntu\";color: white;background-color: #55007f;}.QRadioButton::indicator{width: 20px;height: 20px;}\n"
+"")
+        self.grcdControl.setTitle("")
+        self.grcdControl.setObjectName("grcdControl")
+        self.rbTuPhai = QtWidgets.QRadioButton(self.grcdControl)
+        self.rbTuPhai.setGeometry(QtCore.QRect(260, 10, 181, 100))
+        self.rbTuPhai.setObjectName("rbTuPhai")
+        self.rbTuTrai = QtWidgets.QRadioButton(self.grcdControl)
+        self.rbTuTrai.setGeometry(QtCore.QRect(20, 10, 181, 100))
+        self.rbTuTrai.setChecked(True)
+        self.rbTuTrai.setObjectName("rbTuTrai")
         self.retranslateUi(setKCMoTu)
         QtCore.QMetaObject.connectSlotsByName(setKCMoTu)
         self.btExit.clicked.connect(setKCMoTu.close)
@@ -91,6 +103,8 @@ class Ui_setKCMoTu(object):
         self.btSave.setText(_translate("setKCMoTu", "Lưu"))
         self.btExit.setText(_translate("setKCMoTu", "Thoát"))
         self.label_5.setText(_translate("setKCMoTu", "Hướng dẫn"))
+        self.rbTuPhai.setText(_translate("setKCMoTu", "Tủ phải"))
+        self.rbTuTrai.setText(_translate("setKCMoTu", "Tủ trái"))
 
         self.setEvent()
 
@@ -106,12 +120,18 @@ class Ui_setKCMoTu(object):
             self.tbKCCaiDat.setText(value)
 
     def btSave_click(self):
-        if len(self.tbKCCaiDat.text()) > 0:
+        if len(self.tbKCCaiDat.text()) > 0 and self.rbTuTrai.isChecked():
             for i in range(1,server.numClientLeft+1):
                 nameTu = "Left_"+str(i)
                 server.dataSent2Client[nameTu].dt2Pi2Ar[3] = int(self.tbKCCaiDat.text())
                 server.serverMain.sendMes2Client(nameTu , b'\xee\xee'+bytes(server.dataSent2Client[nameTu].dt2Pi2Ar))
-
+            dialog = MSG_Dialog()
+            dialog.exec_()
+        elif len(self.tbKCCaiDat.text()) > 0 and self.rbTuPhai.isChecked():
+            for i in range(1,server.numClientRight+1):
+                nameTu = "Right_"+str(i)
+                server.dataSent2Client[nameTu].dt2Pi2Ar[3] = int(self.tbKCCaiDat.text())
+                server.serverMain.sendMes2Client(nameTu , b'\xee\xee'+bytes(server.dataSent2Client[nameTu].dt2Pi2Ar))
             dialog = MSG_Dialog()
             dialog.exec_()
 import resources

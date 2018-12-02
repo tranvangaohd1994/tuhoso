@@ -148,16 +148,19 @@ class Ui_setThemTu(object):
                 server.dataReceivedSer[tu] = uart.DataInforSer()
                 server.dataSent2Client[tu] = server.DataSent2Client()
             server.playmp3(server.folderMP3 + "045.mp3")
+            print('them tu ben trai')
         elif server.numClientLeft > self.numLeft :
             "giam so client di"
             for i in range(self.numLeft+1, server.numClientLeft + 1):
                 tu = "Left_" + str(i)
+                server.allConnection[tu].send(b'NG')
                 server.allConnection[tu].close()
                 del server.allConnection[tu]
                 del server.arrIPArrdressLeft[tu]
                 del server.dataReceivedSer[tu]
                 del server.dataSent2Client[tu]
             server.playmp3(server.folderMP3 + "044.mp3")
+            print('xoa tu ben trai')
         if server.numClientRight < self.numRight :
             "tang so client ben phai len"
             for i in range(server.numClientRight + 1, self.numRight + 1):
@@ -165,15 +168,20 @@ class Ui_setThemTu(object):
                 server.arrIPArrdressRight[tu] = uart.dataAllJsonConfig["IPRight"][tu]
                 server.dataReceivedSer[tu] = uart.DataInforSer()
                 server.dataSent2Client[tu] = server.DataSent2Client()
+            print('Them tu ben phai')
+            server.playmp3(server.folderMP3 + "045.mp3")
         elif server.numClientRight > self.numRight :
             "giam so client ben phai"
             for i in range(self.numRight+1, server.numClientRight + 1):
                 tu = "Right_" + str(i)
+                server.allConnection[tu].send(b'NG')
                 server.allConnection[tu].close()
                 del server.allConnection[tu]
                 del server.arrIPArrdressLeft[tu]
                 del server.dataReceivedSer[tu]
                 del server.dataSent2Client[tu]
+            print('Xoa tu ben phai')
+            server.playmp3(server.folderMP3 + "044.mp3")
 
         server.numClientLeft = self.numLeft
         uart.dataAllJsonConfig["IPLeft"]["numLeftActive"] = self.numLeft
@@ -181,7 +189,8 @@ class Ui_setThemTu(object):
         uart.dataAllJsonConfig["IPRight"]["numRightActive"]
         uart.saveConfig()
         server.tuOpenedLeft = "0"
-        print("save config done")
+        server.tuOpenedRight = '0'
+        server.tuActive = '0'
         server.threadLock.release()
 
         
