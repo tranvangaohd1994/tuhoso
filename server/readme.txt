@@ -1,6 +1,8 @@
-new180703:
-    thêm mới chức năng điều khiển điều hòa trên tủ Master, client ko thay đổi gì
-    
+new181211:
+    +chỉnh sửa lại form viết tiếng việt tự code ko cần cài đặt unicode hay virtualkeyboard
+    + xem lại log nhiệt độ sửa lỗi ít data mà vẫn fill toàn bộ trường
+    + khong de thong gio 1 phut khi nao nguoi dung dong moi dong
+
 Header giao tiep giua client va server 
 
 Client - server:

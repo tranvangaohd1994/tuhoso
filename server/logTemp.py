@@ -50,11 +50,22 @@ class PlotCanvas(FigureCanvas):
         
         labels = [item.get_text() for item in ax.get_xticklabels()]
         numStep = int(len(dtX) / len(labels)) + 1
-        if numStep > 0 :
-            j=0
+        j=0
+        if numStep > 1 :
             for i in range(0, len(dtX),numStep):
                 labels[j] = dtX[i]
-                j+=1        
+                j+=1
+        else:
+            dtxT,runT = 0,1 
+            dtxP,runP = len(dtX) -1 , len(labels)-2
+            while dtxT <= dtxP and runT <= runP:
+                labels[runP] = dtX[dtxP]
+                labels[runT] = dtX[dtxT]
+                runP -= 1
+                runT += 1
+                dtxP -= 1
+                dtxT += 1
+  
         ax.legend(loc=1)
         ax.set_xticklabels(labels,rotation=45)
 
@@ -194,8 +205,9 @@ class Ui_SV_LogTemp(object):
 
 
     def tbNumTu_click(self):
-        numMaxLeft = 2
-        numMaxRight = 0
+        import server
+        numMaxLeft = server.numClientLeft
+        numMaxRight = server.numClientRight
         if self.rbTrai.isChecked():
             dialogKey= Ui_Dialog(numMaxLeft)
         else :

@@ -1,142 +1,281 @@
-import threading
-import sys
-import socket
-import logging
-import time
-import struct
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'logTemp.ui'
+#
+# Created by: PyQt5 UI code generator 5.5.1
+#
+# WARNING! All changes made in this file will be lost!
+#install matplotlib befor run
+#pip3 install matplotlib
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import Qt,QSize, QTimer, pyqtSignal,QRect,QDateTime,QDate
+from PyQt5.QtWidgets import (QWidget,QLineEdit,QDialog ,QGridLayout,QSizePolicy, QLabel,QPushButton,QMainWindow,QApplication,QWidget,QHBoxLayout)
+from kbNumber import Ui_Dialog
+import random
+
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
+from time import strftime
 
 
-IPSERVER = "192.168.0.102"
-PORT = 24595
+class MyQLineEdit(QtWidgets.QLineEdit):
+    clicked = pyqtSignal()
+    def mousePressEvent(self,event):
+        self.clicked.emit()
+        QtWidgets.QLineEdit.mousePressEvent(self, event)
 
-class ServerPC(threading.Thread):
-  def __init__(self):
-    threading.Thread.__init__(self)
-    self.daemon = True
+class PlotCanvas(FigureCanvas):
+ 
+    def __init__(self, parent=None, width=5, height=4, dpi=100):
+        fig = Figure(figsize=(width, height), dpi=dpi)
+        #self.axes = fig.add_subplot(111)
+ 
+        FigureCanvas.__init__(self, fig)
+        self.setParent(parent)
+ 
+        FigureCanvas.setSizePolicy(self,
+                QSizePolicy.Expanding,
+                QSizePolicy.Expanding)
+        FigureCanvas.updateGeometry(self)
+        
+    def plot(self,istemp,dtIn,dtOut,dtX):
+        
+        ax = self.figure.add_subplot(111)
+        ax.clear()
+        
+        ax.plot( dtIn, 'r-',color='skyblue',label='Trong tủ')
+        ax.plot( dtOut, 'r-',color='red',label='Ngoài tủ')
+        
+        labels = [item.get_text() for item in ax.get_xticklabels()]
+        numStep = int(len(dtX) / len(labels)) + 1
+        j=0
+        if numStep > 1 :
+            for i in range(0, len(dtX),numStep):
+                labels[j] = dtX[i]
+                j+=1
+        else:
+            dtxT,runT = 0,1 
+            dtxP,runP = len(dtX) -1 , len(labels)-2
+            while dtxT <= dtxP and runT <= runP:
+                labels[runP] = dtX[dtxP]
+                labels[runT] = dtX[dtxT]
+                runP -= 1
+                runT += 1
+                dtxP -= 1
+                dtxT += 1
 
-    self.inforConfig={'KhoangCach':3,'LucCK':4,'KCGiamToc':7,'ChieuQuayDC':1,'TocDoDC':6}
-  def run(self): 
-    global isListenCL
-    self.soc = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    self.soc.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    self.soc.bind((IPSERVER, PORT))
-    self.soc.listen(5)
-    self.logger = logging.getLogger("ServerThreadMain")
-    self.isLeft = True
-    self.conn = None
-    self.csdl = ''
-    
-    print("socket is running")
-    #self.logger.debug("socket is running - server bat dau hoat dong")
-    while isListenCL:
-      self.conn, addr = self.soc.accept()
-      ip, port = str(addr[0]), str(addr[1])
-      print('Accepting connection from ',ip ,':',port)
-      while isListenCL:
-        try :
-          data = self.conn.recv(3)
-          dt = self.conn.recv(2)
-          print(dt)
-          if len(data) == 3 and data[0] == 0xff:
-            if data[1] == 1 : # chon tu ben trai:
-                nameTu = "Left_"
-            elif data[1] == 2 :
-                nameTu = "Right_"
-            else :
-                print("recive Frame tu server bi sai form", data)
-                continue
-            numberTu = int(data[2]) # neu numberTu = 255 tat ca cac tu
+        ax.legend(loc=1)
+        ax.set_xticklabels(labels,rotation=45)
 
-            if (numberTu <= server.numClientLeft and data[1] == 1 ) or (numberTu <= server.numClientRight and data[1] == 2) or numberTu == 255:
-              if numberTu == 0x00: # 00 la tu Master
-                if len(dt)==2 and dt[0] ==0xab and dt[1]== 0xab: #cap nhat thong tin tu
-                  dtSend = b'\xaa\xaa'+ bytearray(uart.dataReceved.myList)+ b'\x00\x00'
-                  self.conn.send(dtSend)
-              else:
-                nameTu = nameTu + str(numberTu)
-                
-                
-                elif len(dt) == 2 and dt[0] == 0xbb and ( dt[1] == 0x01 or dt[1] == 0x02 or dt[1] == 0x03):#bao an toan
-                    print("Pc bao an toan-nhom chuc nang su co")
-                    pass
-                elif len(dt)==2 and dt[0] == 0xdd : # nhom chuc nang dieu khien dieu hoa
-                    
-                    print('van Hanh dieu hoa ' , dt[1] )
-                    
-                elif len(dt)==2 and dt[0] == 0xee : # nhom chuc nang phu tro
-                    print(dt)
-                
-                elif len(dt)==2 and dt[0] == 0xff : # nhom chuc nang cai dat
-                    value = self.conn.recv(1)[0]
-                    print('dt', dt, '  value', value)                                      
-          
-          elif len(data) == 3 and data[0] == 0x23 and data[1] == 0x23 and data[2] == 0x23: #truyen nhan du lieu hton gtin tu
-            #dt 2byte luc nay la ID master hien tai chua can dung toi
-            header = self.conn.recv(7) # theo header la doc 7 byte tiep theo
-            print('header : ', header)
-            if len(header) == 7 : # neu nhan du 7 byte 
-              maLenh = int(header[0])
-              lengthAfter = int(header[4]<<24) + int(header[3]<<16) + int(header[2]<<8) + int(header[1])
-              print('maLenh=',maLenh , '   lengthAfter=',lengthAfter)
-              #doc du so byte gui toi
-              lengthByteReaded = 0
-              self.csdl = b''
-              while (len(self.csdl) < lengthAfter):
-                self.csdl += self.conn.recv(1024)
-              print('dattaInfor = ' ,len(self.csdl))
+        if istemp:
+            ax.set_title("Nhiệt độ")
+        else :
+            ax.set_title("Độ ẩm")
 
-              dataString = self.csdl.decode('utf-8') #decode('ISO-8859-1')
+        self.draw()
 
-              kq = dataString.split('$$$')
-              for dt in kq :
-                online = dt.split('&&&')
-                print('length=', len(online), '   ', online)
+class Ui_SV_LogTemp(object):
+    def setupUi(self, SV_Login):
+        SV_Login.setObjectName("SV_Login")
+        SV_Login.resize(1280, 800)
+        self.frame = QtWidgets.QFrame(SV_Login)
+        self.frame.setGeometry(QtCore.QRect(0, 0, 1280, 800))
+        self.frame.setStyleSheet(".QFrame{background-image:url(:/images/Background.jpg);}.QPushButton:pressed { background-color: #FF6E40}.QPushButton{border-radius: 20px;background-color: #FFC107;font: 75 20pt \"Arial\";}.QLabel{color:#FF8F00;font: 75 32pt \"Arial\";}.MyQLineEdit{background-color:#B2FF59;font: 75 32pt \"Arial\";}")
+        self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame.setObjectName("frame")
+        self.btBack = QtWidgets.QPushButton(self.frame)
+        self.btBack.setGeometry(QtCore.QRect(50, 680, 191, 101))
+        self.btBack.setObjectName("btBack")
+        self.btTemHumi = QtWidgets.QPushButton(self.frame)
+        self.btTemHumi.setGeometry(QtCore.QRect(50, 560, 191, 101))
+        self.btTemHumi.setObjectName("btTemHumi")
+        self.label_7 = QtWidgets.QLabel(self.frame)
+        self.label_7.setGeometry(QtCore.QRect(10, 310, 111, 50))
+        self.label_7.setStyleSheet("")
+        self.label_7.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_7.setObjectName("label_7")
+        self.label_5 = QtWidgets.QLabel(self.frame)
+        self.label_5.setGeometry(QtCore.QRect(0, 490, 141, 50))
+        self.label_5.setStyleSheet("")
+        self.label_5.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_5.setObjectName("label_5")
+        self.tbYear = MyQLineEdit(self.frame)
+        self.tbYear.setGeometry(QtCore.QRect(140, 480, 121, 61))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(32)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(9)
+        self.tbYear.setFont(font)
+        self.tbYear.setObjectName("tbYear")
+        self.label_3 = QtWidgets.QLabel(self.frame)
+        self.label_3.setGeometry(QtCore.QRect(0, 400, 131, 50))
+        self.label_3.setStyleSheet("")
+        self.label_3.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_3.setObjectName("label_3")
+        self.tbDay = MyQLineEdit(self.frame)
+        self.tbDay.setGeometry(QtCore.QRect(140, 310, 121, 61))
+        
+        self.tbDay.setFont(font)
+        self.tbDay.setObjectName("tbDay")
+        self.tbMonth = MyQLineEdit(self.frame)
+        self.tbMonth.setGeometry(QtCore.QRect(140, 390, 121, 61))
+        
+        self.tbMonth.setFont(font)
+        self.tbMonth.setObjectName("tbMonth")
+        self.label_8 = QtWidgets.QLabel(self.frame)
+        self.label_8.setGeometry(QtCore.QRect(10, 240, 111, 50))
+        self.label_8.setStyleSheet("")
+        self.label_8.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_8.setObjectName("label_8")
+        self.tbNumTu = MyQLineEdit(self.frame)
+        self.tbNumTu.setGeometry(QtCore.QRect(140, 230, 121, 61))
+        
+        self.tbNumTu.setFont(font)
+        self.tbNumTu.setObjectName("tbNumTu")
+        self.grcdControl_2 = QtWidgets.QGroupBox(self.frame)
+        self.grcdControl_2.setGeometry(QtCore.QRect(0, 110, 281, 131))
+        self.grcdControl_2.setStyleSheet(".QRadioButton{font: 75 26pt \"Arial\";color: white;background-color: #55007f;}.QRadioButton::indicator{width: 20px;height: 20px;}")
+        self.grcdControl_2.setTitle("")
+        self.grcdControl_2.setObjectName("grcdControl_2")
+        self.rbPhai = QtWidgets.QRadioButton(self.grcdControl_2)
+        self.rbPhai.setGeometry(QtCore.QRect(140, 39, 111, 71))
+        self.rbPhai.setObjectName("rbPhai")
+        self.rbTrai = QtWidgets.QRadioButton(self.grcdControl_2)
+        self.rbTrai.setGeometry(QtCore.QRect(10, 39, 111, 71))
+        self.rbTrai.setChecked(True)
+        self.rbTrai.setObjectName("rbTrai")
 
-              print('da phan tich xong du lieu')
+        self.retranslateUi(SV_Login)
+        QtCore.QMetaObject.connectSlotsByName(SV_Login)
 
-          elif not data or not dt:
-              print('data', data , '   dt=',dt)
-              self.conn.close()
-              print("Client masterPC exit or connection error")
-              break
-              
-        except Exception as e:
-            print("Exception masterPC : ",str(e))
-            self.conn.close()
-            break
+    def retranslateUi(self, SV_Login):
+        _translate = QtCore.QCoreApplication.translate
+        SV_Login.setWindowTitle(_translate("SV_Login", "Form"))
+        self.btBack.setText(_translate("SV_Login", "Quay lại"))
+        self.btTemHumi.setText(_translate("SV_Login", "Độ ẩm")) #"Nhiệt độ"))
+        self.label_7.setText(_translate("SV_Login", "Ngày"))
+        self.label_5.setText(_translate("SV_Login", "Năm"))
+        self.label_3.setText(_translate("SV_Login", "Tháng"))
+        self.label_8.setText(_translate("SV_Login", "Tủ"))
+        self.tbNumTu.setText(_translate("SV_Login", "1"))
+        self.rbPhai.setText(_translate("SV_Login", "Phải"))
+        self.rbTrai.setText(_translate("SV_Login", "Trái"))
 
-def sentTimKiem2PC(data): # tam toi send tim kiem tong quat den PC
-    
-    header = b'\x23\x23\x23\x31\x32\x61'
-    lenData = struct.pack('I', int(len(data)))
-    header = header + lenData + b'\x00\x00' # 2 byte cuoi la CRC
-    if len(header) == 12 :
-        header += data.encode()
-        ServerPC.conn.send(header)
-        print("sent yeu cau den PC : ", header )
+        
+        self.btBack.clicked.connect(SV_Login.close)
+        self.setEvent()
+
+    def setEvent(self):
+        self.seeTemp = True
+
+        self.tbYear.setText(str(strftime("%Y")))
+        self.tbMonth.setText(str(strftime("%m")))
+        self.tbDay.setText(str(strftime("%d")))
+        
+        self.tbNumTu.clicked.connect(self.tbNumTu_click)
+        self.tbYear.clicked.connect(self.tbYear_click)
+        self.tbMonth.clicked.connect(self.tbMonth_click)
+        self.tbDay.clicked.connect(self.tbDay_click)
+        self.btTemHumi.clicked.connect(self.btTemHumi_click)
+
+        self.map = PlotCanvas(self.frame, width=9.5, height=6)
+        self.map.move(320,150)
+        
+        #readData
+        dtIn, dtOut , dtX = self.readFile()
+        self.map.plot(True,dtIn, dtOut , dtX)
+        
+        
+    def btTemHumi_click(self):
+        if self.seeTemp == True :
+            self.seeTemp = False
+            self.btTemHumi.setText("Nhiệt độ")
+        else:
+            self.seeTemp = True
+            self.btTemHumi.setText("Độ ẩm")
+
+        #readData
+        dtIn, dtOut , dtX = self.readFile()
+        self.map.plot(self.seeTemp,dtIn, dtOut , dtX)
 
 
-'''
-dataInfor =  b'32&&&123&&&B\xc3\xa1o c\xc3\xa1o t\xc3\xacnh h\xc3\xacnh th\xe1\xbb\xb1c hi\xe1\xbb\x87n c\xc3\xb4ng t\xc3\xa1c thu BHXH c\xe1\xbb\xa7aBHXH huy\xe1\xbb\x87n Minh H\xc3\xb3a qu\xc3\xbd II n\xc4\x83m 2001&&&3&&&3&&&0&&&14'
-  '$$$33&&&128&&&B\xc3\xa1o c\xc3\xa1o thu BHXH c\xe1\xbb\xa7a BHXH t\xe1\xbb\x89nh Qu\xe1\xba\xa3ng B\xc3\xacnh qu\xc3\xbd I- IV n\xc4\x83m 2001 (04 quy\xe1\xbb\x83n)&&&2&&&1&&&0&&&32$$$123&&&429&&&Ch\xe1\xbb\xa9ng t\xe1\xbb\xab ti\xe1\xbb\x81n m\xe1\xba\xb7t phi\xe1\xba\xbfu chi 1096-1268 c\xe1\xbb\xa7a BHXH t\xe1\xbb\x89nh Qu\xe1\xba\xa3ng B\xc3\xacnh th\xc3\xa1ng 08 n\xc4\x83m 2008 (02 t\xe1\xba\xadp)&&&1&&&2&&&0&&&66$$$344&&&1123&&&B\xc3\xa1o c\xc3\xa1o chi l\xc6\xb0\xc6\xa1ng h\xc6\xb0u, tr\xe1\xbb\xa3 c\xe1\xba\xa5p BHXH do qu\xe1\xbb\xb9 BHXH, ngu\xe1\xbb\x93n NSNN \xc4\x91\xe1\xba\xa3m b\xe1\xba\xa3o c\xe1\xbb\xa7a BHXH huy\xe1\xbb\x87n Minh H\xc3\xb3a th\xc3\xa1ng 01-12 n\xc4\x83m 2012&&&3&&&1&&&0&&&46$$$369&&&1230&&&B\xc3\xa1o c\xc3\xa1o th\xe1\xbb\x91ng k\xc3\xaa k\xe1\xba\xbft qu\xe1\xba\xa3 thu, chi BHXH,BHYT, BHTN c\xe1\xbb\xa7a BHXH huy\xe1\xbb\x87n Tuy\xc3\xaan H\xc3\xb3a th\xc3\xa1ng 09-11 n\xc4\x83m 2013&&&1&&&2&&&0&&&26$$$369&&&1231&&&B\xc3\xa1o c\xc3\xa1o th\xe1\xbb\x91ng k\xc3\xaa k\xe1\xba\xbft qu\xe1\xba\xa3 thu, chi BHXH, BHYT, BHTN c\xe1\xbb\xa7a BHXH huy\xe1\xbb\x87n Minh H\xc3\xb3a th\xc3\xa1ng 09-12 n\xc4\x83m 2013&&&1&&&3&&&0&&&12$$$369&&&1232&&&B\xc3\xa1o c\xc3\xa1o th\xe1\xbb\x91ng k\xc3\xaa k\xe1\xba\xbft qu\xe1\xba\xa3 thu, chi BHXH, BHYT, BHTN c\xe1\xbb\xa7a BHXH huy\xe1\xbb\x87n Qu\xe1\xba\xa3ng Tr\xe1\xba\xa1ch th\xc3\xa1ng 09-12 n\xc4\x83m 2013&&&3&&&3&&&0&&&27$$$369&&&1233&&&B\xc3\xa1o c\xc3\xa1o th\xe1\xbb\x91ng k\xc3\xaa k\xe1\xba\xbft qu\xe1\xba\xa3 thu, chi BHXH, BHYT, BHTN c\xe1\xbb\xa7a BHXH huy\xe1\xbb\x87n Qu\xe1\xba\xa3ng Ninh th\xc3\xa1ng 09-12 n\xc4\x83m 2013&&&3&&&1&&&0&&&33$$$369&&&1234&&&B\xc3\xa1o c\xc3\xa1o th\xe1\xbb\x91ng k\xc3\xaa k\xe1\xba\xbft qu\xe1\xba\xa3 thu, chi BHXH, BHYT, BHTN c\xe1\xbb\xa7a BHXH huy\xe1\xbb\x87n L\xe1\xbb\x87 Th\xe1\xbb\xa7y th\xc3\xa1ng 09-12 n\xc4\x83m 2013&&&3&&&1&&&0&&&45$$$369&&&1235&&&B\xc3\xa1o c\xc3\xa1o t\xc4\x83ng, gi\xe1\xba\xa3m chi BHXH h\xc3\xa0ng th\xc3\xa1ng cho c\xc3\xa1c \xc4\x91\xe1\xbb\x91i t\xc6\xb0\xe1\xbb\xa3ng do qu\xe1\xbb\xb9 BH th\xe1\xba\xa5t nghi\xe1\xbb\x87p \xc4\x91\xe1\xba\xa3m b\xe1\xba\xa3o c\xe1\xbb\xa7a BHXH t\xe1\xbb\x89nh Qu\xe1\xba\xa3ngB\xc3\xacn'
-dataString = dataInfor.decode('utf-8')
-kq = dataString.split('$$$')
-for dt in kq :
-  online = dt.split('&&&')
-  print('length=', len(online), '   ', online)
+    def tbNumTu_click(self):
+        numMaxLeft = 2
+        numMaxRight = 0
+        if self.rbTrai.isChecked():
+            dialogKey= Ui_Dialog(numMaxLeft)
+        else :
+            dialogKey= Ui_Dialog(numMaxRight)
+        
+        value = dialogKey.exec_()
+        if value :
+            self.tbNumTu.setText(value)
+
+    def tbDay_click(self):
+        dialogKey= Ui_Dialog(31)
+        value = dialogKey.exec_()
+        if value :
+            self.tbDay.setText(value)
+
+    def tbMonth_click(self):
+        dialogKey= Ui_Dialog(12)
+        value = dialogKey.exec_()
+        if value :
+            self.tbMonth.setText(value)
+            
+    def tbYear_click(self):
+        dialogKey= Ui_Dialog(3000)
+        value = dialogKey.exec_()
+        if value :
+            self.tbYear.setText(value)
+
+    def readFile(self):
+        a = open("/home/gao/Desktop/temp.log","r")
+        dtIn = []
+        dtOut = []
+        dtX = []
+        nameTu = ""
+        if self.rbTrai.isChecked(): #tu trai duoc check
+            nameTu = "Left_"
+        else :
+            nameTu = "Right_"
+        nameTu += str(self.tbNumTu.text())
+
+        date = str(self.tbYear.text())+"-"+str(self.tbMonth.text())+"-"+str(self.tbDay.text())
+
+        while True:
+            line = a.readline()
+            if not line: 
+                break
+            else:
+                dt = line.split(' ')
+                if dt[0] == date and dt[3] == nameTu :
+                    if float(dt[4]) < 100 and  float(dt[5]) < 100 and float(dt[6])<100 and float(dt[7]) < 100 :
+                        if self.seeTemp :
+                            dtIn.append(float(dt[4]))
+                            dtOut.append(float(dt[6]))
+                        else :
+                            dtIn.append(float(dt[5]))
+                            dtOut.append(float(dt[7]))
+                        dtx = dt[1].split(':')
+                        dtX.append(dtx[0]+":"+dtx[1])
+        #print(dtIn, dtX)
+        return dtIn, dtOut , dtX
+
+import resources
 
 
-'''
-ServerPC = ServerPC()
-ServerPC.start()
-isListenCL = 10
-isListenCL = input('tintin')
-while isListenCL :
-    try:
-        sentTimKiem2PC(isListenCL)
-        isListenCL = input('tintin')
-    except Exception as e:
-        print(e.__doc__())
-        isListenCL = 0
-        break
 
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    SV_Login = QtWidgets.QWidget()
+    ui = Ui_SV_LogTemp()
+    ui.setupUi(SV_Login)
+    SV_Login.show()
+    sys.exit(app.exec_())

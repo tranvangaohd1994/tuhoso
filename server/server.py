@@ -374,6 +374,16 @@ class DongMoTu :
             for sock in allConnection:
                 allConnection[sock].send(b'\xda\xda' + daHT)
         threadLock.release()
+    def checkHumen(self):
+        isHumenIn=False
+        for nameTu in dataReceivedSer:
+            if dataReceivedSer[nameTu].numPersonOld < dataReceivedSer[nameTu].numPersonIn:
+                isHumenIn=True
+                dataReceivedSer[nameTu].numPersonOld = dataReceivedSer[nameTu].numPersonIn
+                return nameTu,isHumenIn,dataReceivedSer[nameTu].numPersonIn
+            else:
+                dataReceivedSer[nameTu].numPersonOld = dataReceivedSer[nameTu].numPersonIn
+        return "0",isHumenIn,0
 #tao ra 1 thread client khi co 1 client ket noi den server
 class ListenClientThread(threading.Thread,DongMoTu):
     def __init__(self,idThreadIP,connection,soTu):

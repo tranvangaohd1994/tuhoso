@@ -63,19 +63,22 @@ class Ui_Dialog(QDialog):
         self.lbValue.setAlignment(QtCore.Qt.AlignCenter)
         self.lbValue.setObjectName("lbValue")
 
-        
+       
         self.grcdControl = QtWidgets.QGroupBox(self.frame)
-        self.grcdControl.setGeometry(QtCore.QRect(540, 170, 221, 241))
+        self.grcdControl.setGeometry(QtCore.QRect(540, 150, 221, 301))
         self.grcdControl.setStyleSheet(".QRadioButton{font: 75 Bold 26pt \"Ubuntu\";color: white;background-color: #55007f;}.QRadioButton::indicator{width: 20px;height: 20px;}")
         self.grcdControl.setTitle("")
         self.grcdControl.setObjectName("grcdControl")
         self.rbTuPhai = QtWidgets.QRadioButton(self.grcdControl)
-        self.rbTuPhai.setGeometry(QtCore.QRect(20, 130, 181, 100))
+        self.rbTuPhai.setGeometry(QtCore.QRect(20, 110, 181, 81))
         self.rbTuPhai.setObjectName("rbTuPhai")
         self.rbTuTrai = QtWidgets.QRadioButton(self.grcdControl)
-        self.rbTuTrai.setGeometry(QtCore.QRect(20, 10, 181, 100))
+        self.rbTuTrai.setGeometry(QtCore.QRect(20, 0, 181, 81))
         self.rbTuTrai.setChecked(True)
         self.rbTuTrai.setObjectName("rbTuTrai")
+        self.rbHuy = QtWidgets.QRadioButton(self.grcdControl)
+        self.rbHuy.setGeometry(QtCore.QRect(20, 210, 181, 81))
+        self.rbHuy.setObjectName("rbHuy")
 
         self.retrunVal = None
 
@@ -100,6 +103,7 @@ class Ui_Dialog(QDialog):
         self.lbValue.setText(_translate("Dialog", "0"))
         self.rbTuPhai.setText(_translate("Dialog", "Tủ phải"))
         self.rbTuTrai.setText(_translate("Dialog", "Tủ trái"))
+        self.rbHuy.setText(_translate("Dialog", "Hủy"))
 
         self.setEvent()
 
@@ -156,9 +160,11 @@ class Ui_Dialog(QDialog):
         self.lbValue.setText(str(self.num))
     def exec_(self):
         super(Ui_Dialog,self).exec_()
-        isChoosed = 'R'
+        isChoosed = 'H'
         if self.rbTuTrai.isChecked():
             isChoosed = 'L'
+        elif self.rbTuPhai.isChecked():
+            isChoosed = 'R'
         if self.showGroup :
             return self.retrunVal , isChoosed
         return self.retrunVal

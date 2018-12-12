@@ -14,7 +14,7 @@ import time
 import server
 import masterPC
 
-from keyboard import Ui_Keyboard
+from keyboardVN import Ui_KeyboardVN
 from fKetQuaTraCuu import Ui_fKetQuaTraCuu
 from kbNumber import Ui_Dialog
 
@@ -140,7 +140,7 @@ class Ui_formTimKiem(object):
         self.tbTimKiem.setText(value)
 
     def tbTimKiem_click(self):
-        dialogKey = Ui_Keyboard()
+        dialogKey = Ui_KeyboardVN()
         value = dialogKey.exec_()
         self.tbTimKiem.setText(value)
     
@@ -162,10 +162,11 @@ class Ui_formTimKiem(object):
             masterPC.ServerPC.csdl = []
             header = b'\x23\x23\x23\x31\x32\x61'
             data = str(self.tbTimKiem.text())
-            lenData = struct.pack('I', int(len(data)))
+            dt = data.encode('utf8')
+            lenData = struct.pack('I', int(len(dt)))
             header = header + lenData + b'\x00\x00' # 2 byte cuoi la CRC
             if len(header) == 12 :
-                header += data.encode()
+                header += dt
                 masterPC.ServerPC.conn.send(header)
                 print("sent yeu cau den PC : ", header )
                 time.sleep(0.2)

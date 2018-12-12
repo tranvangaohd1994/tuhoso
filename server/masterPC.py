@@ -6,6 +6,7 @@ import time
 import serial
 import server
 import uart
+import struct
 
 
 IPSERVER = "192.168.0.100"
@@ -41,7 +42,15 @@ class ServerPC(threading.Thread):
         try :
           data = self.conn.recv(3)
           dt = self.conn.recv(2)
-          if len(data) == 3 and data[0] == 0xff:
+          if len(data) == 3 and len(dt) == 2 and data[0]==0xff and dt[0] == 0xee and dt[1]== 0x32:
+            print("sent to PC numTu ")
+            header = b'\xff\x01\x01\xee\x32\x32'
+            trai = struct.pack('B',server.numClientLeft)
+            phai = struct.pack('B',server.numClientRight)
+            header =header + trai + phai
+            self.conn.send(header)
+                
+          elif len(data) == 3 and data[0] == 0xff:
             if data[1] == 1 : # chon tu ben trai:
                 nameTu = "Left_"
                 server.tuTraiPhai = 'L'
@@ -130,6 +139,8 @@ class ServerPC(threading.Thread):
                       
                     elif dt[1]== 0x06 :# tat cam bien
                         pass                                        
+                
+                #ff 01 01 ee 32 32 03-trai 04-phai
           
           elif len(data) == 3 and data[0] == 0x23 and data[1] == 0x23 and data[2] == 0x23: #truyen nhan du lieu hton gtin tu
             #dt 2byte luc nay la ID master hien tai chua can dung toi

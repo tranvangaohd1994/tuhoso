@@ -67,10 +67,10 @@ class Ui_welcomeForm(object):
     def btnExit_click(self):
         self.NumExit +=1
         if self.NumExit == 3 :
-            server.isListenCL = False
-            server.serverMain.stop()
-            del server.serverMain
-            uart.isRead =False
+            # server.isListenCL = False
+            # server.serverMain.stop()
+            # del server.serverMain
+            # uart.isRead =False
             self.Form.close()
 
     def frame_click(self):
@@ -82,6 +82,14 @@ class Ui_welcomeForm(object):
         if server.isFullScreen:
             self.window.showFullScreen()
             
+    def closeEvent(self):
+        self.ctimer.cancel()
+        server.isListenCL = False
+        server.serverMain.stop()
+        del server.serverMain
+        del masterPC.ServerPC
+        uart.isRead =False
+
 import resources
 
 if __name__ == "__main__":

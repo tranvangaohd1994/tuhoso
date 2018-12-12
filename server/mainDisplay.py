@@ -246,6 +246,7 @@ class Ui_SV_mainDisplay(object):
         self.isShowWaitForm = False
         self.isShowSuCoForm = False
         self.saveLog = True
+        self.isPressThongGio = True
 
     def showTemp(self):
         try:
@@ -276,19 +277,12 @@ class Ui_SV_mainDisplay(object):
             if tuActive[0] == 'L' or tuActive[0] == 'R': #hien thi tu nao dang mo va thong bao nguoi vao ra
                 if server.dataReceivedSer[tuActive].statusMotor == 2:
                     self.lbstatusMotor.setText(tuActive + " Mở")
+                    self.lbSoNguoi.setText(str(server.dataReceivedSer[tuActive].numPersonIn))
                 elif server.dataReceivedSer[tuActive].statusMotor == 4:
                     self.lbstatusMotor.setText("Đóng")
+                    self.lbSoNguoi.setText("")
 
                 self.lbKhoangCach.setText(str(server.dataReceivedSer[tuActive].distanceSen_1))
-                
-                try:
-                    if len(self.lbSoNguoi.text()) > 0 and int(self.lbSoNguoi.text()) <  server.dataReceivedSer[tuActive].numPersonIn:
-                        #co nguoi vao tu
-                        self.linkFile = server.folderMP3 + "009.mp3"
-                        server.playmp3(self.linkFile)
-                except:
-                    pass
-                self.lbSoNguoi.setText(str(server.dataReceivedSer[tuActive].numPersonIn))
             else: #neu ko co tu nao dang mo thi setText bang Dong or Dung
                 self.lbKhoangCach.setText("")
                 self.lbSoNguoi.setText("")
@@ -296,6 +290,15 @@ class Ui_SV_mainDisplay(object):
                 self.lbstatusMotor.setText("Đóng")    
                 if server.isWaiting == 2: # dung khan cap
                     self.lbstatusMotor.setText("Dừng")
+
+            #thong bao co nguoi vao tu
+            tuHumen,isHumenIn,numHumen = server.serverMain.checkHumen()
+            if isHumenIn:
+                #co nguoi vao tu
+                self.linkFile = server.folderMP3 + "009.mp3"
+                server.playmp3(self.linkFile)
+                self.lbSoNguoi.setText(str(numHumen))
+                self.lbstatusMotor.setText(tuHumen)
             
             #check su co xem có sự cố cháy ko nếu có sự cố cháy thì chỉ hiện sự cố cháy thôi rồi return 
             server.serverMain.checkSuCo(False)
@@ -361,15 +364,18 @@ class Ui_SV_mainDisplay(object):
                 timeSplit = timeThongGio.split(':')
                 if dateH == int(timeSplit[0]) and dateM == int(timeSplit[1]) and timeSplit[3] == '1':# co kich hoat ham autoThongGio
                     print("Mo thong gio tu dong")
+                    self.isPressThongGio = False #thuc hien tu dong
                     self.btThongGio_click() # thuc hien chuc nang mo thong gio
                     server.countThongGio = int(timeSplit[2]) * 60 
+                    
             elif server.executeThongGio == 1 : #che do thong gio dang mo
                 server.countThongGio -= 1 #tang so giay thong gio dang mo len 1
-                if server.countThongGio <= 0 :
+                if server.countThongGio <= 0 and self.isPressThongGio == False: #chi tu dong tat khi tu dong bat, khi bat bang tay ko tu tat thong gio
                     self.btThongGio_click() # neu het thoi gian thong gio tat che do thong gio
             if server.numThongGio == -3 :
                 self.btThongGio.setText("Tắt\nThông gió")
             elif server.numThongGio == 0 :
+                self.isPressThongGio = True
                 self.btThongGio.setText("Thông gió")
 
             #Kiem tra den thap sent to Arduino to status of server 
@@ -421,9 +427,10 @@ class Ui_SV_mainDisplay(object):
             self.buttonTimer()
         #chon dong tu ben nao
         dialogKey = Ui_Dialog(10,True)
-        value, server.tuTraiPhai = dialogKey.exec_()
+        value, isChoosed = dialogKey.exec_()
         print("bt dong tu clicked")
-        if server.isWaiting != 1:
+        if isChoosed != 'H' and server.isWaiting != 1:
+            server.tuTraiPhai = isChoosed
             server.dongMoTuFunction(0,0)
             
     def btExit_click(self):
@@ -446,10 +453,10 @@ class Ui_SV_mainDisplay(object):
             return
         else:
             self.buttonTimer()
-
-        dialogKey = Ui_Dialog(10,True)
-        value , server.tuTraiPhai= dialogKey.exec_()
-        if value == '0':
+        maxTu = server.numClientLeft if server.numClientLeft > server.numClientRight else server.numClientRight
+        dialogKey = Ui_Dialog(maxTu,True)
+        value , isChoosed = dialogKey.exec_()
+        if value == '0' or isChoosed == 'H':
             return
         if server.tuTraiPhai == 'L' and int(value) <= server.numClientLeft:
             nameTu = "Left_"+str(value)

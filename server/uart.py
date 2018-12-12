@@ -13,6 +13,8 @@ class DataInforSer():
         for i in range(0,30):
             self.myList.append(0)
         self.setData(self.myList)
+        self.numPersonOld = 0
+    
     def setData(self, arrData):
         for i in range(0,30):
             self.myList[i] = arrData[i]
@@ -42,7 +44,7 @@ class DataInforSer():
         self.fingerprintSen = int(arrData[27])
         self.statusLight = int(arrData[28])
         self.statusMotor = int(arrData[29])
-
+        
 #ttyAMA0
 ser = serial.Serial(
 	port = '/dev/ttyAMA0',
