@@ -72,7 +72,8 @@ class Ui_FormWaiting(object):
         else:
             self.frameWaiting.setStyleSheet("#frameWaiting{background-image: url(:/images/waiting0.jpg);}")
 
-        if server.isFlag2906 == False and self.NumWaiting < (2000 / self.Gaptimer ) : #time out toi da 2s
+        if server.isFlag2906 == False or self.NumWaiting < (2000 / self.Gaptimer ) : #time out toi da 2s
+
             return
         
         time.sleep(0.01)
@@ -94,15 +95,33 @@ class Ui_FormWaiting(object):
 
         elif server.isWaiting == 2:
             print(" timer check dung khan cap ",server.isWaiting)
+            if server.statusSuCo == 1:
+                self.linkFile = server.folderMP3 + "007_1.mp3"
+            elif server.statusSuCo == 4:
+                self.linkFile = server.folderMP3 + "007_2.mp3"
             self.btStop_clicked()
             return
         if server.haveSucoClient == True:
             print("form waiting : co su co")
             self.btStop_clicked()
             return
+
+        #trong che do thong gio
+        if server.numThongGio == -3 :
+            flagDoneThongGio = True
+            for tu in server.dataReceivedSer:
+                if server.dataReceivedSer[tu].statusMotor != 7 :# check cac tu co deu dong khong
+                    flagDoneThongGio = False
+                    break
+            if flagDoneThongGio :
+                server.threadLock.acquire()
+                if server.isWaiting == 1:# thoat do mo thanh cong ko co dung khan cap
+                    server.isWaiting = 0
+                    server.serverMain.sentWaiting2AllClient() 
+                server.threadLock.release()
+                self.ctimer.stop()
+                self.form.close()
         
-        
-            
     def btStop_clicked(self):
         
         server.playmp3(self.linkFile)

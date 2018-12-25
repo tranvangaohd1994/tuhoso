@@ -19,6 +19,7 @@ class dataInfor():
         self.myList=[]
         self.tempOut = 0
         self.humiOut = 0
+        self.distanceSen_Real = 0
         for i in range(0,30):
             self.myList.append(0)
         self.setData(self.myList)
@@ -145,6 +146,8 @@ class listeningServer(threading.Thread):
                     #print("in hear")
                     if len(data) == 2 and data[0] == 0x4f and data[1] == 0x4b:
                         isActive2Ser =True
+                        dtBatDat = bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
+                        sentDataRandom(b'\xcc\xcc', bytes(dtBatDat))
                         print("actived ok ")
                     elif len(data) == 2 and data[0] == 78 and data[1] == 71:
                         isActive2Ser = False
@@ -265,10 +268,11 @@ class listeningServer(threading.Thread):
                         DataCamBien[0]=0x30
                         sentCambien()
                     elif len(data) == 2 and data[0] == 0xda and data[1] == 0xda : #lenh tat den client    
-                        tempHumi = self.connection.recv(4)
-                        if len(tempHumi) == 4 :
+                        tempHumi = self.connection.recv(6)
+                        if len(tempHumi) == 6 :
                             dataReceved.tempOut = int(tempHumi[0] + (tempHumi[1]<<8))/10
                             dataReceved.humiOut = int(tempHumi[2] + (tempHumi[3]<<8))/10
+                            dataReceved.distanceSen_Real = int(tempHumi[4]+(tempHumi[5]<<8))
                             
 
             except Exception as e:
@@ -431,6 +435,20 @@ statusSuCo = 0
 threadLock = threading.Lock()
 caseBD = -1
 mixer.init()
+
+def saveNhietDoDoAm():
+    global myNumberTu
+    H = strftime("%H")
+    M = strftime("%M")#minute
+    S = strftime("%S")
+    d = strftime("%d")
+    m = strftime("%m")#month
+    Y = strftime("%Y")
+    fileLog = '/home/pi/backup/temp/'+ Y + m + d + '.txt'
+    file = open(fileLog,"a")
+    s =  H + ':' + M + ' ' + '0' + " "+str(dataReceved.tempIn )+" " +str(dataReceved.humiIn )+" "+str(dataReceved.tempOut )+ " "+str(dataReceved.humiOut )+'\n'
+    file.write(s) 
+    file.close()
 
 def playmp3(nameFile):
     try:

@@ -15,19 +15,19 @@ import uart
 from pygame import mixer
 
 class MyQFrame(QtWidgets.QFrame):
-    #
     clicked = pyqtSignal()
     def mousePressEvent(self,event):
         self.clicked.emit()
         QtWidgets.QFrame.mousePressEvent(self, event)
 
 class Ui_welcomeForm(object):
+
     def setupUi(self, welcomeForm):
         self.NumExit =0
         self.Form = welcomeForm
         welcomeForm.setObjectName("welcomeForm")
         welcomeForm.resize(1280, 800)
-        welcomeForm.setStyleSheet("#welcomeForm{background-image: url(:/images/welcome.jpg);}#btExit{border: none;background-color: none;}#frame{border: none;background-color: none;}")
+        welcomeForm.setStyleSheet("#welcomeForm{background-image: url(:/images/welcome.png);}#btExit{border: none;background-color: none;}#frame{border: none;background-color: none;}")
         self.frame = MyQFrame(welcomeForm)
         self.frame.setGeometry(QtCore.QRect(0, 149, 1280, 631))
         self.frame.setObjectName("frame")
@@ -67,10 +67,9 @@ class Ui_welcomeForm(object):
     def btnExit_click(self):
         self.NumExit +=1
         if self.NumExit == 3 :
-            # server.isListenCL = False
-            # server.serverMain.stop()
-            # del server.serverMain
-            # uart.isRead =False
+            server.isListenCL = False
+            server.serverMain.stop()
+            uart.isRead =False
             self.Form.close()
 
     def frame_click(self):

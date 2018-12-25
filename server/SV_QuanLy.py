@@ -14,32 +14,33 @@ from SV_CaiDatNangCao import Ui_SVCaiDatNangCao
 import uart
 
 class Ui_SVQuanLy(object):
+    
     def setupUi(self, SVQuanLy):
         SVQuanLy.setObjectName("SVQuanLy")
         SVQuanLy.resize(1280, 800)
         self.SVQuanLy = SVQuanLy
-
+        
         self.frame = QtWidgets.QFrame(SVQuanLy)
         self.frame.setGeometry(QtCore.QRect(0, 0, 1280, 800))
-        self.frame.setStyleSheet(".QFrame{background-image:url(:/images/Background.jpg);}.QLabel{color:#F44336 ;font: 75  30pt \"Arial\";}QPushButton:pressed { background-color: #FF6E40}.QPushButton{border-radius: 20px;background-color: #FFC107;font: 75 20pt \"Arial\";}#btBack{color:white;border-image: url(:/images/back.png);}")
+        self.frame.setStyleSheet(".QFrame{background-image:url(:/images/background.png);}.QLabel{color:#4e9400 ;font:bold 30pt \"Arial\";}.QPushButton:pressed { background-color: #FF6E40}.QPushButton{border-radius: 10px;background-color: #4e9400;font: bold 20pt \"Arial\";color:#ffffff}#btBack{color:white;border-image: url(:/images/back.png);}")
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
         self.lbtitle = QtWidgets.QLabel(self.frame)
-        self.lbtitle.setGeometry(QtCore.QRect(470, 180, 381, 61))
+        self.lbtitle.setGeometry(QtCore.QRect(470, 160, 381, 61))
         self.lbtitle.setAlignment(QtCore.Qt.AlignCenter)
         self.lbtitle.setObjectName("lbtitle")
         self.btBack = QtWidgets.QPushButton(self.frame)
-        self.btBack.setGeometry(QtCore.QRect(580, 650, 211, 111))
+        self.btBack.setGeometry(QtCore.QRect(820, 310, 150, 80))
         self.btBack.setObjectName("btBack")
         self.btCaiDatPhuTro = QtWidgets.QPushButton(self.frame)
-        self.btCaiDatPhuTro.setGeometry(QtCore.QRect(390, 340, 191, 151))
+        self.btCaiDatPhuTro.setGeometry(QtCore.QRect(380, 310, 161, 81))
         self.btCaiDatPhuTro.setObjectName("btCaiDatPhuTro")
         self.btCaiDatNangCao = QtWidgets.QPushButton(self.frame)
-        self.btCaiDatNangCao.setGeometry(QtCore.QRect(740, 340, 191, 151))
+        self.btCaiDatNangCao.setGeometry(QtCore.QRect(600, 310, 161, 81))
         self.btCaiDatNangCao.setObjectName("btCaiDatNangCao")
         self.lbThongBao = QtWidgets.QLabel(self.frame)
-        self.lbThongBao.setGeometry(QtCore.QRect(340, 540, 681, 71))
+        self.lbThongBao.setGeometry(QtCore.QRect(330, 460, 681, 71))
         self.lbThongBao.setAlignment(QtCore.Qt.AlignCenter)
         self.lbThongBao.setObjectName("lbThongBao")
 

@@ -10,17 +10,21 @@ def crc16(data: bytes):
 class DataInforSer():
     def __init__(self):
         self.myList=[]
+        self.dtForPC=[]
         for i in range(0,30):
             self.myList.append(0)
+            self.dtForPC.append(0)
         self.setData(self.myList)
         self.numPersonOld = 0
-    
+    def setdataPC(self):
+        for i in range(0,30):
+            self.dtForPC[i] = self.myList[i]
     def setData(self, arrData):
         for i in range(0,30):
             self.myList[i] = arrData[i]
         self.tempIn = int(arrData[0] + (arrData[1]<<8))/10
         self.humiIn = int(arrData[2] + (arrData[3]<<8))/10
-        self.tempOut = int(arrData[4] + (arrData[5]<<8))/10
+        self.tempOut = int(arrData[4] + (arrData[5]<<8))/10 
         self.humiOut = int(arrData[6] + (arrData[7]<<8))/10
         self.fireSenIn = int(arrData[8])
         self.fireSenOut = int(arrData[9])
@@ -29,7 +33,7 @@ class DataInforSer():
         self.infrared_3 = int(arrData[12])
         self.infrared_4 = int(arrData[13])
         self.numPersonIn = int(arrData[14])
-        self.numPersonOut = int(arrData[15])
+        self.khoaDC = int(arrData[15])
         self.proximitySen_1=int(arrData[16])
         self.proximitySen_2=int(arrData[17])
         self.electricMotor = int(arrData[18])
@@ -44,6 +48,7 @@ class DataInforSer():
         self.fingerprintSen = int(arrData[27])
         self.statusLight = int(arrData[28])
         self.statusMotor = int(arrData[29])
+        
         
 #ttyAMA0
 ser = serial.Serial(

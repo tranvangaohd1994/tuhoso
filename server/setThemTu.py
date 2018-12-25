@@ -169,7 +169,7 @@ class Ui_setThemTu(object):
                 server.dataReceivedSer[tu] = uart.DataInforSer()
                 server.dataSent2Client[tu] = server.DataSent2Client()
             print('Them tu ben phai')
-            server.playmp3(server.folderMP3 + "045.mp3")
+            server.playmp3(server.folderMP3 + "047.mp3")
         elif server.numClientRight > self.numRight :
             "giam so client ben phai"
             for i in range(self.numRight+1, server.numClientRight + 1):
@@ -181,12 +181,12 @@ class Ui_setThemTu(object):
                 del server.dataReceivedSer[tu]
                 del server.dataSent2Client[tu]
             print('Xoa tu ben phai')
-            server.playmp3(server.folderMP3 + "044.mp3")
+            server.playmp3(server.folderMP3 + "046.mp3")
 
         server.numClientLeft = self.numLeft
         uart.dataAllJsonConfig["IPLeft"]["numLeftActive"] = self.numLeft
         server.numClientRight = self.numRight
-        uart.dataAllJsonConfig["IPRight"]["numRightActive"]
+        uart.dataAllJsonConfig["IPRight"]["numRightActive"] = self.numRight
         uart.saveConfig()
         server.tuOpenedLeft = "0"
         server.tuOpenedRight = '0'

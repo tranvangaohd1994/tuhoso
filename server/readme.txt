@@ -2,10 +2,18 @@ new181211:
     +chỉnh sửa lại form viết tiếng việt tự code ko cần cài đặt unicode hay virtualkeyboard
     + xem lại log nhiệt độ sửa lỗi ít data mà vẫn fill toàn bộ trường
     + khong de thong gio 1 phut khi nao nguoi dung dong moi dong
+    + phan vuot xong tu client->server va tren server nua
+    + chuyen doi tu tu trai phai sang 1 2 3 4 5 6 mo tu tren master
+    - mo tu tong quat xong ko thoat kiem tra lai ham mo tu tong quat
 
 Header giao tiep giua client va server 
 
 Client - server:
+    Thao tac vuot :
+        cc c0 : vuot phai  
+        cc c1 : vuot trai
+        cc c2 : vuot xuong
+        cc c3 : vuot len
     Dong mo tu :
         ee ee : mo tu
         ee ff : dong tu
@@ -13,7 +21,12 @@ Client - server:
     Nhan data:
         aa aa : nhan 30byte data;
         bb bb : data setting
+    BaoDuong :
+        bd bd : gui tiep tuc trong che do bao duong
+        bd bc : bao cam bien kiem tra xong 
+    
     Su co:
+
     
 server 2 client:
     4f 4b : active after login
@@ -38,6 +51,7 @@ server 2 client:
     fa fa : server gui cai dat thoi gian cho client
 
     da da : server gui du lieu nhiet do va do am ben ngoai ve cho client
+    cd cd : clent gui lai khoang cach cho cac con
 
 server_1 so bien:{
 
@@ -64,7 +78,20 @@ server_1 so bien:{
         42 : ket thuc frm bao duong
 }
 
-update 20181201{
-    + update form tim kiem dul lieu form het qua du lieu
-    + masterPC tham phan nhan du lieu
+update UI 20181201{
+    welcome
+    SV_Login
+    dongTuLanDau
+    mainDisplay
+    logTemp
+    kbNumber
+    keyboard
+    keyboardVN
+    formTimKiem
+    SV_CaiDatNangCao
+    SV_KCGiamToc
+    SV_KCMoTu
+    setThongGio
+    setDieuKienVanHanh
+
 }

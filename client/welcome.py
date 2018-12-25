@@ -28,7 +28,7 @@ class Ui_welcomeForm(object):
         self.welcomeForm = welcomeForm
         self.frame = MyQFrame(welcomeForm)
         self.frame.setGeometry(QtCore.QRect(0, 0, 1280, 800))
-        self.frame.setStyleSheet(".MyQFrame{background-image: url(:/images/welcome.jpg);}")
+        self.frame.setStyleSheet(".MyQFrame{background-image: url(:/images/welcome.png);}")
         self.frame.clicked.connect(self.frame_click)
         #endUI
         self.setEvent()
@@ -42,12 +42,11 @@ class Ui_welcomeForm(object):
     def checkServerActive(self):
         if client.isActive2Ser and self.isOpenForm==False:
             self.isOpenForm =True
-            self.window = QtWidgets.QMainWindow()
             self.ui = Ui_SV_mainDisplay()
-            self.ui.setupUi(self.window)
-            self.window.show()
+            self.ui.setupUi()
+            self.ui.show()
             if client.isFullScreen:
-                self.window.showFullScreen()
+                self.ui.showFullScreen()
         elif client.isActive2Ser == False:
             self.isOpenForm = False
         

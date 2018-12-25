@@ -8,17 +8,16 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import (QWidget,QLineEdit,QDialog ,QGridLayout, QLabel,QPushButton,QMainWindow,QApplication,QWidget,QHBoxLayout)
+
 class Ui_Dialog(QDialog):
     def __init__(self,maxValue,showGroup=False):
         self.maxValue = maxValue
-        self.showGroup = showGroup
         super(Ui_Dialog,self).__init__()
         self.setObjectName("Dialog")
         self.resize(780, 480)
         self.frame = QtWidgets.QFrame(self)
         self.frame.setGeometry(QtCore.QRect(0, 0, 780, 480))
-        self.frame.setStyleSheet(".QFrame{background-color: #4FC3F7;}.QPushButton:pressed { background-color: #FF6E40} .QPushButton{font: 75 32pt \"Arial\";background-color: rgb(0, 0, 0);color: rgb(255, 255, 255);border-radius: 20px}.QLabel{font: 75 30pt \"Arial\";background-color: rgb(0, 0, 0);color: rgb(255, 255, 255);}\n"
-            "")
+        self.frame.setStyleSheet(".QFrame{background-color: #ffffff;}.QPushButton:pressed { background-color: #FF6E40} .QPushButton{font: 26pt \"Arial\";background-color: #4e9400;color: #ffffff;border-radius: 20px}.QLabel{font:  30pt \"Arial\";background-color: #ffffff;color: #000000;border: 2px solid gray;border-radius: 10px;padding: 0 8px;}")
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
@@ -59,28 +58,12 @@ class Ui_Dialog(QDialog):
         self.btClear.setGeometry(QtCore.QRect(40, 370, 121, 81))
         self.btClear.setObjectName("btClear")
         self.lbValue = QtWidgets.QLabel(self.frame)
-        self.lbValue.setGeometry(QtCore.QRect(560, 60, 181, 81))
+        self.lbValue.setGeometry(QtCore.QRect(560, 40, 181, 81))
         self.lbValue.setAlignment(QtCore.Qt.AlignCenter)
         self.lbValue.setObjectName("lbValue")
-
-       
-        self.grcdControl = QtWidgets.QGroupBox(self.frame)
-        self.grcdControl.setGeometry(QtCore.QRect(540, 150, 221, 301))
-        self.grcdControl.setStyleSheet(".QRadioButton{font: 75 Bold 26pt \"Ubuntu\";color: white;background-color: #55007f;}.QRadioButton::indicator{width: 20px;height: 20px;}")
-        self.grcdControl.setTitle("")
-        self.grcdControl.setObjectName("grcdControl")
-        self.rbTuPhai = QtWidgets.QRadioButton(self.grcdControl)
-        self.rbTuPhai.setGeometry(QtCore.QRect(20, 110, 181, 81))
-        self.rbTuPhai.setObjectName("rbTuPhai")
-        self.rbTuTrai = QtWidgets.QRadioButton(self.grcdControl)
-        self.rbTuTrai.setGeometry(QtCore.QRect(20, 0, 181, 81))
-        self.rbTuTrai.setChecked(True)
-        self.rbTuTrai.setObjectName("rbTuTrai")
-        self.rbHuy = QtWidgets.QRadioButton(self.grcdControl)
-        self.rbHuy.setGeometry(QtCore.QRect(20, 210, 181, 81))
-        self.rbHuy.setObjectName("rbHuy")
-
-        self.retrunVal = None
+        self.btHuy = QtWidgets.QPushButton(self.frame)
+        self.btHuy.setGeometry(QtCore.QRect(590, 230, 121, 81))
+        self.btHuy.setObjectName("btHuy")
 
         self.retranslateUi(self)
         QtCore.QMetaObject.connectSlotsByName(self)
@@ -88,6 +71,7 @@ class Ui_Dialog(QDialog):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Keyboard"))
+
         self.bt1.setText(_translate("Dialog", "1"))
         self.bt4.setText(_translate("Dialog", "4"))
         self.bt7.setText(_translate("Dialog", "7"))
@@ -101,14 +85,12 @@ class Ui_Dialog(QDialog):
         self.btEnter.setText(_translate("Dialog", "Enter"))
         self.btClear.setText(_translate("Dialog", "Clear"))
         self.lbValue.setText(_translate("Dialog", "0"))
-        self.rbTuPhai.setText(_translate("Dialog", "Tủ phải"))
-        self.rbTuTrai.setText(_translate("Dialog", "Tủ trái"))
-        self.rbHuy.setText(_translate("Dialog", "Hủy"))
+        self.btHuy.setText(_translate("Dialog", "Hủy"))
 
         self.setEvent()
 
     def setEvent(self):
-        self.grcdControl.setVisible(self.showGroup)
+        self.retrunVal = None
         self.btEnter.clicked.connect(self.btEnter_click)
         self.bt0.clicked.connect(self.bt0_click)
         self.bt1.clicked.connect(self.bt1_click)
@@ -121,6 +103,7 @@ class Ui_Dialog(QDialog):
         self.bt8.clicked.connect(self.bt8_click)
         self.bt9.clicked.connect(self.bt9_click)
         self.btClear.clicked.connect(self.btClear_click)
+        self.btHuy.clicked.connect(self.btHuy_click)
         self.num = 0
     def numberPress(self,numIn):
         self.num = self.num*10 + numIn
@@ -160,14 +143,9 @@ class Ui_Dialog(QDialog):
         self.lbValue.setText(str(self.num))
     def exec_(self):
         super(Ui_Dialog,self).exec_()
-        isChoosed = 'H'
-        if self.rbTuTrai.isChecked():
-            isChoosed = 'L'
-        elif self.rbTuPhai.isChecked():
-            isChoosed = 'R'
-        if self.showGroup :
-            return self.retrunVal , isChoosed
         return self.retrunVal
+    def btHuy_click(self):
+        self.close()
         
 class MSG_Dialog(QDialog):
     def __init__(self):
@@ -200,3 +178,5 @@ class MSG_Dialog(QDialog):
         super(MSG_Dialog,self).exec_()
     def btEnter_click(self):
         self.accept()
+    
+    

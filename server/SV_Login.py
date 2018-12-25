@@ -11,7 +11,7 @@ from PyQt5.QtWidgets import (QWidget,QLineEdit,QDialog ,QGridLayout, QLabel,QPus
 from PyQt5.QtCore import pyqtSignal,QTimer
 from keyboard import Ui_Keyboard
 #from mainDisplay import Ui_SV_mainDisplay
-from SV_ChonTuCaiDat import Ui_SVChonClient
+from dongTuLanDau import Ui_dtLanDau
 import resources
 import uart
 from pygame import mixer
@@ -29,48 +29,39 @@ class MyQLineEdit(QtWidgets.QLineEdit):
         QtWidgets.QLineEdit.mousePressEvent(self, event)
 
 class Ui_SVLogin(object):
+    
     def setupUi(self, SV_Login):
         SV_Login.setObjectName("SV_Login")
         SV_Login.resize(1280, 800)
         self.SV_Login = SV_Login
-
+        
         self.frame = QtWidgets.QFrame(SV_Login)
         self.frame.setGeometry(QtCore.QRect(0, 0, 1280, 800))
-        self.frame.setStyleSheet(".QFrame{background-image:url(:/images/Background.jpg);}#lbtitle{color:#F44336 ;font: 75  36pt \"Arial\";}#lbThongBao{color:#F44336 ;font: 75  34pt \"Arial\";}#lbtitle2{color:#2196F3 ;font: 75  30pt \"Arial\";}QPushButton:pressed { background-color: #FF6E40}.QPushButton{border-radius: 20px;background-color: #FFC107;font: 75 20pt \"Arial\";}")
+        self.frame.setStyleSheet(".QFrame{background-image:url(:/images/login.png);}.QLabel{color:#F44336 ;font:  bold 30pt \"Arial\";qproperty-alignment: AlignCenter;}.QPushButton:pressed { background-color: #FF6E40}.QPushButton{border-radius: 20px;background-color: #4e9400;font: bold 25pt \"Arial\";color:#ffffff}.MyQLineEdit{border: 2px solid gray;border-radius: 10px;padding: 0 8px;font: bold 32px \"Arial\";text-align: center;}")
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
-        self.lbtitle = QtWidgets.QLabel(self.frame)
-        self.lbtitle.setGeometry(QtCore.QRect(400, 130, 471, 71))
-        self.lbtitle.setAlignment(QtCore.Qt.AlignCenter)
-        self.lbtitle.setObjectName("lbtitle")
         self.btBack = QtWidgets.QPushButton(self.frame)
-        self.btBack.setGeometry(QtCore.QRect(570, 530, 191, 101))
+        self.btBack.setGeometry(QtCore.QRect(570, 640, 151, 71))
         self.btBack.setObjectName("btBack")
         self.tbInput = MyQLineEdit(self.frame)
-        self.tbInput.setGeometry(QtCore.QRect(430, 330, 421, 71))
+        self.tbInput.setGeometry(QtCore.QRect(440, 450, 421, 91))
+        self.tbInput.setText("")
         self.tbInput.setObjectName("tbInput")
-        self.lbtitle2 = QtWidgets.QLabel(self.frame)
-        self.lbtitle2.setGeometry(QtCore.QRect(450, 260, 381, 61))
-        self.lbtitle2.setAlignment(QtCore.Qt.AlignCenter)
-        self.lbtitle2.setObjectName("lbtitle2")
         self.lbThongBao = QtWidgets.QLabel(self.frame)
-        self.lbThongBao.setGeometry(QtCore.QRect(160, 440, 961, 51))
-        self.lbThongBao.setAlignment(QtCore.Qt.AlignCenter)
+        self.lbThongBao.setGeometry(QtCore.QRect(240, 330, 791, 61))
         self.lbThongBao.setObjectName("lbThongBao")
-        
 
         self.retranslateUi(SV_Login)
         QtCore.QMetaObject.connectSlotsByName(SV_Login)
 
         self.btBack.clicked.connect(SV_Login.close)
+    
     def retranslateUi(self, SV_Login):
         _translate = QtCore.QCoreApplication.translate
         SV_Login.setWindowTitle(_translate("SV_Login", "Form"))
-        self.lbtitle.setText(_translate("SV_Login", "Giao diện quản lý"))
         self.btBack.setText(_translate("SV_Login", "Quay lại"))
-        self.lbThongBao.setText("Có thể quẹt thẻ RFID hoặc quét vân tay")
-        self.lbtitle2.setText(_translate("SV_Login", "Nhập mật khẩu"))
+        self.lbThongBao.setText("")
 
         self.setEvent()
        
@@ -87,8 +78,6 @@ class Ui_SVLogin(object):
         self.ctimer.timeout.connect(self.checkScanOK)
         self.ctimer.start(10)
         
-
-        
         t1 = threading.Thread(target=self.runThreadSensor)
         t1.start()
         """
@@ -102,6 +91,8 @@ class Ui_SVLogin(object):
         
     def runThreadSensor(self):
         while self.isRun:
+            self.runScan()
+            '''
             if self.isRunRFID :
                 self.threadLock.acquire()
                 self.rdr = RFID()
@@ -112,7 +103,7 @@ class Ui_SVLogin(object):
             else :
                 self.runScan()
                 self.isRunRFID = True
-
+            '''
     def runScan(self):
                     
         try:
@@ -141,9 +132,10 @@ class Ui_SVLogin(object):
             ## Wait that finger is read
             numC = 0
             while ( f.readImage() == False and self.isRun):
-                numC+=1
-                if numC > 20 :
-                    return
+                pass
+                # numC+=1
+                # if numC > 20 :
+                #     return
             ## Converts read image to characteristics and stores it in charbuffer 1
             if self.isRun == False:
                 return
@@ -202,10 +194,10 @@ class Ui_SVLogin(object):
         dialogKey = Ui_Keyboard()
         value = dialogKey.exec_()
         self.tbInput.setText(value)
-        if value == '1994':
+        if value == '199419941994':
             server.isExitApp = True
             self.SV_Login.close()
-        elif value == uart.dtMK or value == uart.dtMKHard:
+        elif value == uart.dtMK or value == uart.dtMKHard :
             self.isRun = False
             self.dangNhap()
         else :
@@ -217,7 +209,7 @@ class Ui_SVLogin(object):
         server.serverMain.sentLogin2AllClient()
         
         self.window = QtWidgets.QMainWindow()
-        self.ui = Ui_SVChonClient()
+        self.ui = Ui_dtLanDau()
         self.ui.setupUi(self.window)
         self.window.show()
         if server.isFullSceen:
@@ -232,7 +224,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     SVCaiDatPhuTro = QtWidgets.QWidget()
-    ui = Ui_SVCaiDatPhuTro()
+    ui = Ui_SVLogin()
     ui.setupUi(SVCaiDatPhuTro)
     SVCaiDatPhuTro.show()
     sys.exit(app.exec_())

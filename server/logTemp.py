@@ -11,13 +11,14 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt,QSize, QTimer, pyqtSignal,QRect,QDateTime,QDate
 from PyQt5.QtWidgets import (QWidget,QLineEdit,QDialog ,QGridLayout,QSizePolicy, QLabel,QPushButton,QMainWindow,QApplication,QWidget,QHBoxLayout)
-from kbNumber import Ui_Dialog
 import random
-
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 from time import strftime
+
+from kbNumber import Ui_Dialog
+import server
 
 
 class MyQLineEdit(QtWidgets.QLineEdit):
@@ -80,75 +81,64 @@ class Ui_SV_LogTemp(object):
     def setupUi(self, SV_Login):
         SV_Login.setObjectName("SV_Login")
         SV_Login.resize(1280, 800)
+        
         self.frame = QtWidgets.QFrame(SV_Login)
         self.frame.setGeometry(QtCore.QRect(0, 0, 1280, 800))
-        self.frame.setStyleSheet(".QFrame{background-image:url(:/images/Background.jpg);}.QPushButton:pressed { background-color: #FF6E40}.QPushButton{border-radius: 20px;background-color: #FFC107;font: 75 20pt \"Arial\";}.QLabel{color:#FF8F00;font: 75 32pt \"Arial\";}.MyQLineEdit{background-color:#B2FF59;font: 75 32pt \"Arial\";}")
+        self.frame.setStyleSheet(".QFrame{background-image:url(:/images/background.png);}.QPushButton:pressed { background-color: #FF6E40}.QPushButton{font: 26pt \"Arial\";background-color: #4e9400;color: #ffffff;border-radius: 20px}.QLabel{color:#000000;font: 32pt \"Arial\";}.MyQLineEdit{font:  30pt \"Arial\";background-color: #ffffff;color: #000000;border: 2px solid gray;border-radius: 10px;padding: 0 8px;}")
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
         self.btBack = QtWidgets.QPushButton(self.frame)
-        self.btBack.setGeometry(QtCore.QRect(50, 680, 191, 101))
+        self.btBack.setGeometry(QtCore.QRect(50, 610, 160, 80))
         self.btBack.setObjectName("btBack")
         self.btTemHumi = QtWidgets.QPushButton(self.frame)
-        self.btTemHumi.setGeometry(QtCore.QRect(50, 560, 191, 101))
+        self.btTemHumi.setGeometry(QtCore.QRect(50, 490, 160, 80))
         self.btTemHumi.setObjectName("btTemHumi")
         self.label_7 = QtWidgets.QLabel(self.frame)
-        self.label_7.setGeometry(QtCore.QRect(10, 310, 111, 50))
+        self.label_7.setGeometry(QtCore.QRect(10, 240, 111, 50))
         self.label_7.setStyleSheet("")
         self.label_7.setAlignment(QtCore.Qt.AlignCenter)
         self.label_7.setObjectName("label_7")
         self.label_5 = QtWidgets.QLabel(self.frame)
-        self.label_5.setGeometry(QtCore.QRect(0, 490, 141, 50))
+        self.label_5.setGeometry(QtCore.QRect(0, 420, 141, 50))
         self.label_5.setStyleSheet("")
         self.label_5.setAlignment(QtCore.Qt.AlignCenter)
         self.label_5.setObjectName("label_5")
         self.tbYear = MyQLineEdit(self.frame)
-        self.tbYear.setGeometry(QtCore.QRect(140, 480, 121, 61))
+        self.tbYear.setGeometry(QtCore.QRect(140, 410, 121, 61))
         font = QtGui.QFont()
         font.setFamily("Arial")
-        font.setPointSize(32)
+        font.setPointSize(30)
         font.setBold(False)
         font.setItalic(False)
-        font.setWeight(9)
+        font.setWeight(50)
         self.tbYear.setFont(font)
         self.tbYear.setObjectName("tbYear")
         self.label_3 = QtWidgets.QLabel(self.frame)
-        self.label_3.setGeometry(QtCore.QRect(0, 400, 131, 50))
+        self.label_3.setGeometry(QtCore.QRect(0, 330, 131, 50))
         self.label_3.setStyleSheet("")
         self.label_3.setAlignment(QtCore.Qt.AlignCenter)
         self.label_3.setObjectName("label_3")
         self.tbDay = MyQLineEdit(self.frame)
-        self.tbDay.setGeometry(QtCore.QRect(140, 310, 121, 61))
+        self.tbDay.setGeometry(QtCore.QRect(140, 240, 121, 61))
         
         self.tbDay.setFont(font)
         self.tbDay.setObjectName("tbDay")
         self.tbMonth = MyQLineEdit(self.frame)
-        self.tbMonth.setGeometry(QtCore.QRect(140, 390, 121, 61))
-        
+        self.tbMonth.setGeometry(QtCore.QRect(140, 320, 121, 61))
+       
         self.tbMonth.setFont(font)
         self.tbMonth.setObjectName("tbMonth")
         self.label_8 = QtWidgets.QLabel(self.frame)
-        self.label_8.setGeometry(QtCore.QRect(10, 240, 111, 50))
+        self.label_8.setGeometry(QtCore.QRect(10, 170, 111, 50))
         self.label_8.setStyleSheet("")
         self.label_8.setAlignment(QtCore.Qt.AlignCenter)
         self.label_8.setObjectName("label_8")
         self.tbNumTu = MyQLineEdit(self.frame)
-        self.tbNumTu.setGeometry(QtCore.QRect(140, 230, 121, 61))
+        self.tbNumTu.setGeometry(QtCore.QRect(140, 160, 121, 61))
         
         self.tbNumTu.setFont(font)
         self.tbNumTu.setObjectName("tbNumTu")
-        self.grcdControl_2 = QtWidgets.QGroupBox(self.frame)
-        self.grcdControl_2.setGeometry(QtCore.QRect(0, 110, 281, 131))
-        self.grcdControl_2.setStyleSheet(".QRadioButton{font: 75 26pt \"Arial\";color: white;background-color: #55007f;}.QRadioButton::indicator{width: 20px;height: 20px;}")
-        self.grcdControl_2.setTitle("")
-        self.grcdControl_2.setObjectName("grcdControl_2")
-        self.rbPhai = QtWidgets.QRadioButton(self.grcdControl_2)
-        self.rbPhai.setGeometry(QtCore.QRect(140, 39, 111, 71))
-        self.rbPhai.setObjectName("rbPhai")
-        self.rbTrai = QtWidgets.QRadioButton(self.grcdControl_2)
-        self.rbTrai.setGeometry(QtCore.QRect(10, 39, 111, 71))
-        self.rbTrai.setChecked(True)
-        self.rbTrai.setObjectName("rbTrai")
 
         self.retranslateUi(SV_Login)
         QtCore.QMetaObject.connectSlotsByName(SV_Login)
@@ -162,17 +152,13 @@ class Ui_SV_LogTemp(object):
         self.label_5.setText(_translate("SV_Login", "Năm"))
         self.label_3.setText(_translate("SV_Login", "Tháng"))
         self.label_8.setText(_translate("SV_Login", "Tủ"))
-        self.tbNumTu.setText(_translate("SV_Login", "1"))
-        self.rbPhai.setText(_translate("SV_Login", "Phải"))
-        self.rbTrai.setText(_translate("SV_Login", "Trái"))
-
-        
+                
         self.btBack.clicked.connect(SV_Login.close)
         self.setEvent()
 
     def setEvent(self):
         self.seeTemp = True
-
+        self.tbNumTu.setText(str(server.myNumberTu))
         self.tbYear.setText(str(strftime("%Y")))
         self.tbMonth.setText(str(strftime("%m")))
         self.tbDay.setText(str(strftime("%d")))
@@ -190,7 +176,6 @@ class Ui_SV_LogTemp(object):
         dtIn, dtOut , dtX = self.readFile()
         self.map.plot(True,dtIn, dtOut , dtX)
         
-        
     def btTemHumi_click(self):
         if self.seeTemp == True :
             self.seeTemp = False
@@ -203,15 +188,10 @@ class Ui_SV_LogTemp(object):
         dtIn, dtOut , dtX = self.readFile()
         self.map.plot(self.seeTemp,dtIn, dtOut , dtX)
 
-
     def tbNumTu_click(self):
-        import server
-        numMaxLeft = server.numClientLeft
-        numMaxRight = server.numClientRight
-        if self.rbTrai.isChecked():
-            dialogKey= Ui_Dialog(numMaxLeft)
-        else :
-            dialogKey= Ui_Dialog(numMaxRight)
+        numMaxLeft = server.numClientLeft + server.numClientRight + 1
+        
+        dialogKey= Ui_Dialog(numMaxLeft)
         
         value = dialogKey.exec_()
         if value :
@@ -236,42 +216,43 @@ class Ui_SV_LogTemp(object):
             self.tbYear.setText(value)
 
     def readFile(self):
-        a = open("/home/pi/Desktop/temp.log","r")
+        # 22:05 1 23 22 24 24
         dtIn = []
         dtOut = []
         dtX = []
-        nameTu = ""
-        if self.rbTrai.isChecked(): #tu trai duoc check
-            nameTu = "Left_"
-        else :
-            nameTu = "Right_"
-        nameTu += str(self.tbNumTu.text())
-
-        date = str(self.tbYear.text())+"-"+str(self.tbMonth.text())+"-"+str(self.tbDay.text())
-
-        while True:
-            line = a.readline()
-            if not line: 
-                break
-            else:
-                dt = line.split(' ')
-                if dt[0] == date and dt[3] == nameTu :
-                    if float(dt[4]) < 100 and  float(dt[5]) < 100 and float(dt[6])<100 and float(dt[7]) < 100 :
-                        if self.seeTemp :
-                            dtIn.append(float(dt[4]))
-                            dtOut.append(float(dt[6]))
-                        else :
-                            dtIn.append(float(dt[5]))
-                            dtOut.append(float(dt[7]))
-                        dtx = dt[1].split(':')
-                        dtX.append(dtx[0]+":"+dtx[1])
-        #print(dtIn, dtX)
+        nameTu = str(self.tbNumTu.text())
+        monthText = str(self.tbMonth.text())
+        if len(monthText) == 1 :
+            monthText = '0' + monthText
+        dayText = str(self.tbDay.text())
+        if len(dayText) == 1:
+            dayText = '0' + dayText
+        nameFile = str(self.tbYear.text())+monthText+dayText+'.txt'
+        try :
+            fileR = open('/home/pi/backup/temp/'+nameFile,"r")
+            while True:
+                line = fileR.readline()
+                if not line: 
+                    break
+                else:
+                    dt = line.split(' ')
+                    if dt[1] == nameTu :
+                        if float(dt[2]) < 100 and  float(dt[3]) < 100 and float(dt[4])<100 and float(dt[5]) < 100 :
+                            if self.seeTemp :
+                                dtIn.append(float(dt[2]))
+                                dtOut.append(float(dt[4]))
+                            else :
+                                dtIn.append(float(dt[3]))
+                                dtOut.append(float(dt[5]))
+                            dtX.append(dt[0])
+        except Exception as e:
+            print('Exeption in readFile',e.__doc__)
         return dtIn, dtOut , dtX
 
 import resources
-"""
 
 
+'''
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
@@ -280,4 +261,4 @@ if __name__ == "__main__":
     ui.setupUi(SV_Login)
     SV_Login.show()
     sys.exit(app.exec_())
-"""
+'''

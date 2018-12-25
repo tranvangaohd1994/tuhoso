@@ -24,89 +24,57 @@ class Ui_setKCMoTu(object):
         setKCMoTu.setStyleSheet("")
         self.frame = QtWidgets.QFrame(setKCMoTu)
         self.frame.setGeometry(QtCore.QRect(0, 0, 1280, 800))
-        self.frame.setStyleSheet(".QFrame{background-image: url(:/images/darkbg.jpg);}#QPushButton:pressed { background-color:#FF6E40}.QPushButton{border-radius: 20px;background-color: #FFC107;font: 75 20pt \"Arial\";}.QLabel{color:#FF8F00;font: 75 32pt \"Arial\";}.MyQLineEdit{background-color:#B2FF59;font: 75 32pt \"Arial\";}")
+        self.frame.setStyleSheet(".QFrame{background-image: url(:/images/kcmt.png);}.QPushButton:pressed { background-color: #FF6E40}.QPushButton{border-radius: 15px;background-color: #4e9400;font: bold 20pt \"Arial\";color:#ffffff}.MyQLineEdit{border: 2px solid black;border-radius: 10px;padding: 0 8px;font: bold 32px \"Arial\"; text-align: center;}")
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
-        self.label = QtWidgets.QLabel(self.frame)
-        self.label.setGeometry(QtCore.QRect(0, 120, 1281, 61))
-        self.label.setStyleSheet("font: 75 32pt \"Arial\";\n"
-            "background-color: rgb(0, 0, 0);\n"
-            "color: rgb(255, 255, 255);")
-        self.label.setAlignment(QtCore.Qt.AlignCenter)
-        self.label.setObjectName("label")
-        self.label_2 = QtWidgets.QLabel(self.frame)
-        self.label_2.setGeometry(QtCore.QRect(60, 230, 421, 50))
-        self.label_2.setStyleSheet("")
-        self.label_2.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_2.setObjectName("label_2")
-        self.label_3 = QtWidgets.QLabel(self.frame)
-        self.label_3.setGeometry(QtCore.QRect(60, 570, 421, 50))
-        self.label_3.setStyleSheet("")
-        self.label_3.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_3.setObjectName("label_3")
-        self.label_4 = QtWidgets.QLabel(self.frame)
-        self.label_4.setGeometry(QtCore.QRect(60, 420, 421, 50))
-        self.label_4.setStyleSheet("")
-        self.label_4.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_4.setObjectName("label_4")
         self.btSave = QtWidgets.QPushButton(self.frame)
-        self.btSave.setGeometry(QtCore.QRect(850, 650, 151, 101))
+        self.btSave.setGeometry(QtCore.QRect(210, 620, 161, 81))
         self.btSave.setObjectName("btSave")
         self.btExit = QtWidgets.QPushButton(self.frame)
-        self.btExit.setGeometry(QtCore.QRect(1070, 650, 141, 101))
+        self.btExit.setGeometry(QtCore.QRect(415, 620, 161, 81))
         self.btExit.setObjectName("btExit")
         self.tbKCHienTai = MyQLineEdit(self.frame)
-        self.tbKCHienTai.setGeometry(QtCore.QRect(60, 300, 421, 61))
-        font = QtGui.QFont()
-        font.setFamily("Arial")
-        font.setPointSize(32)
-        font.setBold(False)
-        font.setItalic(False)
-        font.setWeight(9)
-        self.tbKCHienTai.setFont(font)
+        self.tbKCHienTai.setGeometry(QtCore.QRect(390, 330, 261, 81))
         self.tbKCHienTai.setObjectName("tbKCHienTai")
         self.tbKCCaiDat = MyQLineEdit(self.frame)
-        self.tbKCCaiDat.setGeometry(QtCore.QRect(60, 490, 421, 61))
-      
-        self.tbKCCaiDat.setFont(font)
+        self.tbKCCaiDat.setGeometry(QtCore.QRect(390, 430, 261, 81))
+        
         self.tbKCCaiDat.setObjectName("tbKCCaiDat")
-        self.label_5 = QtWidgets.QLabel(self.frame)
-        self.label_5.setGeometry(QtCore.QRect(830, 260, 361, 51))
-        self.label_5.setStyleSheet("")
-        self.label_5.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_5.setObjectName("label_5")
         self.grcdControl = QtWidgets.QGroupBox(self.frame)
-        self.grcdControl.setGeometry(QtCore.QRect(40, 640, 481, 121))
-        self.grcdControl.setStyleSheet(".QRadioButton{font: 75 Bold 26pt \"Ubuntu\";color: white;background-color: #55007f;}.QRadioButton::indicator{width: 20px;height: 20px;}\n"
-"")
+        self.grcdControl.setGeometry(QtCore.QRect(70, 550, 681, 60))
+        self.grcdControl.setStyleSheet("#grcdControl{background-color:#ffffff;border-radius: 5px;}\n"
+        ".QRadioButton {background-color:white;color:#4e9400;font:bold 24px \"Arial\";}.QRadioButton::indicator{width:30px;height:30px;border-radius:20px;} .QRadioButton::indicator:checked{background-color:       red;border: 2px solid #4e9400;}\n"
+        ".QRadioButton::indicator:unchecked {border: 2px solid #4e9400;border-radius: 20px;}\n"
+        "")
         self.grcdControl.setTitle("")
         self.grcdControl.setObjectName("grcdControl")
         self.rbTuPhai = QtWidgets.QRadioButton(self.grcdControl)
-        self.rbTuPhai.setGeometry(QtCore.QRect(260, 10, 181, 100))
+        self.rbTuPhai.setGeometry(QtCore.QRect(260, 5, 181, 50))
         self.rbTuPhai.setObjectName("rbTuPhai")
         self.rbTuTrai = QtWidgets.QRadioButton(self.grcdControl)
-        self.rbTuTrai.setGeometry(QtCore.QRect(20, 10, 181, 100))
+        self.rbTuTrai.setGeometry(QtCore.QRect(20, 5, 181, 50))
         self.rbTuTrai.setChecked(True)
         self.rbTuTrai.setObjectName("rbTuTrai")
+        self.rbToanBo = QtWidgets.QRadioButton(self.grcdControl)
+        self.rbToanBo.setGeometry(QtCore.QRect(470, 5, 181, 50))
+        self.rbToanBo.setObjectName("rbToanBo")
+
         self.retranslateUi(setKCMoTu)
         QtCore.QMetaObject.connectSlotsByName(setKCMoTu)
-        self.btExit.clicked.connect(setKCMoTu.close)
 
     def retranslateUi(self, setKCMoTu):
         _translate = QtCore.QCoreApplication.translate
         setKCMoTu.setWindowTitle(_translate("setKCMoTu", "Form"))
-        self.label.setText(_translate("setKCMoTu", "Cài đặt khoảng cách mở tủ"))
-        self.label_2.setText(_translate("setKCMoTu", "Hiện đang cài đặt"))
-        self.label_3.setText(_translate("setKCMoTu", "Giá trị : 30-100"))
-        self.label_4.setText(_translate("setKCMoTu", "Nhập Khoảng cách"))
         self.btSave.setText(_translate("setKCMoTu", "Lưu"))
         self.btExit.setText(_translate("setKCMoTu", "Thoát"))
-        self.label_5.setText(_translate("setKCMoTu", "Hướng dẫn"))
-        self.rbTuPhai.setText(_translate("setKCMoTu", "Tủ phải"))
-        self.rbTuTrai.setText(_translate("setKCMoTu", "Tủ trái"))
+        self.tbKCHienTai.setText(_translate("setKCMoTu", "8"))
+        self.rbTuPhai.setText(_translate("setKCMoTu", "Dãy Phải"))
+        self.rbTuTrai.setText(_translate("setKCMoTu", "Dãy Trái"))
+        self.rbToanBo.setText(_translate("setKCMoTu", "Toàn bộ"))
 
         self.setEvent()
+        self.btExit.clicked.connect(setKCMoTu.close)
 
     def setEvent(self):
         self.tbKCHienTai.setText(str(int(server.dataSent2Client["Left_1"].dt2Pi2Ar[3])))
@@ -120,18 +88,24 @@ class Ui_setKCMoTu(object):
             self.tbKCCaiDat.setText(value)
 
     def btSave_click(self):
-        if len(self.tbKCCaiDat.text()) > 0 and self.rbTuTrai.isChecked():
-            for i in range(1,server.numClientLeft+1):
-                nameTu = "Left_"+str(i)
-                server.dataSent2Client[nameTu].dt2Pi2Ar[3] = int(self.tbKCCaiDat.text())
-                server.serverMain.sendMes2Client(nameTu , b'\xee\xee'+bytes(server.dataSent2Client[nameTu].dt2Pi2Ar))
-            dialog = MSG_Dialog()
-            dialog.exec_()
-        elif len(self.tbKCCaiDat.text()) > 0 and self.rbTuPhai.isChecked():
-            for i in range(1,server.numClientRight+1):
-                nameTu = "Right_"+str(i)
-                server.dataSent2Client[nameTu].dt2Pi2Ar[3] = int(self.tbKCCaiDat.text())
-                server.serverMain.sendMes2Client(nameTu , b'\xee\xee'+bytes(server.dataSent2Client[nameTu].dt2Pi2Ar))
+        if len(self.tbKCCaiDat.text()) > 0 :
+            if self.rbToanBo.isChecked():
+                for tu in server.allConnection:
+                    server.dataSent2Client[tu].dt2Pi2Ar[3] = int(self.tbKCCaiDat.text())
+                    server.serverMain.sendMes2Client(tu , b'\xee\xee'+bytes(server.dataSent2Client[tu].dt2Pi2Ar))    
+
+            elif  self.rbTuTrai.isChecked():
+                for i in range(1,server.numClientLeft+1):
+                    nameTu = "Left_"+str(i)
+                    server.dataSent2Client[nameTu].dt2Pi2Ar[3] = int(self.tbKCCaiDat.text())
+                    server.serverMain.sendMes2Client(nameTu , b'\xee\xee'+bytes(server.dataSent2Client[nameTu].dt2Pi2Ar))
+           
+            elif self.rbTuPhai.isChecked():
+                for i in range(1,server.numClientRight+1):
+                    nameTu = "Right_"+str(i)
+                    server.dataSent2Client[nameTu].dt2Pi2Ar[3] = int(self.tbKCCaiDat.text())
+                    server.serverMain.sendMes2Client(nameTu , b'\xee\xee'+bytes(server.dataSent2Client[nameTu].dt2Pi2Ar))
+            
             dialog = MSG_Dialog()
             dialog.exec_()
 import resources
