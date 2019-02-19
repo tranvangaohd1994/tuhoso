@@ -1,0 +1,21 @@
+Phần 1 : cài đặt hệ điều hành cho pi3 B+ trên laptop linux
+
+   bước 1 : tải hệ điều hành mới nhất tại https://www.raspberrypi.org/downloads/raspbian/  chọn loại Raspbian Stretch with desktop and recommended software và download ZIP
+   bước 2 : giải nén được file image your_image_file_name.img
+   bước 3 : mở terminal tại folder chứa file your_image_file_name.img 
+   bước 4 : cắm thẻ nhớ vào áo thẻ đưa vào cổng SD trên laptop xác nhận thẻ nhận
+   bước 5 : sau khi đã nhận thẻ nhớ, trong terminal chạy dòng lệnh để nạp hệ điều hành vào thẻ nhớ 
+      sudo dd bs=1M if=your_image_file_name.img of=/dev/sdx
+
+   tham khảo tại cài đặt hệ điều hành tại các link sau để cài trên win
+   https://raspberrypi.stackexchange.com/questions/931/how-do-i-install-an-os-image-onto-an-sd-card
+   http://mlab.vn/45369-raspberry-pi-cai-he-dieu-hanh-raspbian-cho-raspberry-pi-3.html
+
+Phần 2 cấu hình raspberrypi
+   Sau khi cài đặt xong hệ điều hành vào thẻ nhớ, cắm thẻ nhớ vào pi3-B+ cắm chuột, bàn phím, màn hình sau đó cắm nguồn cuối cùng
+   chờ ít phút để hệ điều hành khởi động và màn hình sẽ hiện giao diện như sau
+   
+   tiến hành kết nối wifi và update 
+
+   sau khi update xong chọn 
+
